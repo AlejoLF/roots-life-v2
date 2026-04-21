@@ -32,7 +32,7 @@ export function Hero({
         className="absolute inset-0 lg:hidden"
         style={{
           backgroundImage:
-            'linear-gradient(180deg, rgba(14,14,14,0.45) 0%, rgba(14,14,14,0.85) 100%), url("/images/comodoro/hero-mobile.jpg")',
+            'linear-gradient(180deg, rgba(14,14,14,0.45) 0%, rgba(14,14,14,0.85) 100%), url("/images/comodoro/hero-mobile.webp")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: 'grayscale(100%) contrast(1.05)',
@@ -44,7 +44,7 @@ export function Hero({
         className="absolute inset-0 hidden lg:block"
         style={{
           backgroundImage:
-            'linear-gradient(180deg, rgba(14,14,14,0.25) 0%, rgba(14,14,14,0.78) 100%), url("/images/comodoro/hero-desktop.jpg")',
+            'linear-gradient(180deg, rgba(14,14,14,0.25) 0%, rgba(14,14,14,0.78) 100%), url("/images/comodoro/hero-desktop.webp")',
           backgroundSize: 'cover',
           backgroundPosition: 'center 40%',
           filter: 'saturate(0.95) contrast(1.05)',

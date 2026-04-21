@@ -35,9 +35,9 @@ export const products: ProductDetail[] = [
     description:
       'Halftone denso sobre algodón peinado negro. Pegaso recortado contra un grid global — símbolo de libertad sin perder el rumbo. Cápsula 22.22, 80 unidades numeradas.',
     images: [
-      { src: '/images/remeras/Numerología/Numerología - Pegasus 2222 - negra.png', label: 'Frontal — negra' },
-      { src: '/images/remeras/Numerología/Numerología - Pegasus 2222 - blanca.png', label: 'Frontal — blanca' },
-      { src: '/images/remeras/Numerología/Numerología - Pegasus 2222 - Close up - negra.png', label: 'Close up — detalle estampado' },
+      { src: '/images/remeras/Numerología/Numerología - Pegasus 2222 - negra.webp', label: 'Frontal — negra' },
+      { src: '/images/remeras/Numerología/Numerología - Pegasus 2222 - blanca.webp', label: 'Frontal — blanca' },
+      { src: '/images/remeras/Numerología/Numerología - Pegasus 2222 - Close up - negra.webp', label: 'Close up — detalle estampado' },
     ],
     colors: [
       { name: 'Negro', value: '#0E0E0E' },
@@ -63,7 +63,7 @@ export const products: ProductDetail[] = [
     description:
       'Serpiente estampada con halftone orgánico sobre fondo crudo. Código 33 33 — transformación constante, piel que se renueva. Serigrafía a tres tintas.',
     images: [
-      { src: '/images/remeras/Numerología/Numerología - Snake 3333.png', label: 'Frontal' },
+      { src: '/images/remeras/Numerología/Numerología - Snake 3333.webp', label: 'Frontal' },
     ],
     colors: [{ name: 'Crudo', value: '#E3DBC8' }],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -85,7 +85,7 @@ export const products: ProductDetail[] = [
     description:
       'Mariposa fragmentada en pixel-halftone. El 55 55 simboliza ciclo completo — muerte y renacimiento. Estampa central con halftone denso.',
     images: [
-      { src: '/images/remeras/Numerología/Numerología - Butterfly 5555.png', label: 'Frontal' },
+      { src: '/images/remeras/Numerología/Numerología - Butterfly 5555.webp', label: 'Frontal' },
     ],
     colors: [{ name: 'Crudo', value: '#E3DBC8' }],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -109,7 +109,7 @@ export const products: ProductDetail[] = [
     description:
       'Serigrafía a tres tintas sobre algodón orgánico. Un llamado a la costa del sur — días sin apuro, sol y viento. Parte de la cápsula South Coast.',
     images: [
-      { src: '/images/remeras/South Coast/South Coast - No bad days.png', label: 'Frontal' },
+      { src: '/images/remeras/South Coast/South Coast - No bad days.webp', label: 'Frontal' },
     ],
     colors: [{ name: 'Crema', value: '#FAFAFA' }],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
@@ -131,7 +131,7 @@ export const products: ProductDetail[] = [
     description:
       'Ritual costero: chill y repetir. Tipografía bold sobre algodón orgánico, con acentos en tintas suaves.',
     images: [
-      { src: '/images/remeras/South Coast/South Coast - Chill & Repeat.png', label: 'Frontal' },
+      { src: '/images/remeras/South Coast/South Coast - Chill & Repeat.webp', label: 'Frontal' },
     ],
     colors: [{ name: 'Crema', value: '#FAFAFA' }],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -153,7 +153,7 @@ export const products: ProductDetail[] = [
     description:
       'El viento como protagonista. Estampa con movimiento, guiño a las tardes frescas de la costa patagónica.',
     images: [
-      { src: '/images/remeras/South Coast/South Coast - Wind it.png', label: 'Frontal' },
+      { src: '/images/remeras/South Coast/South Coast - Wind it.webp', label: 'Frontal' },
     ],
     colors: [{ name: 'Crema', value: '#FAFAFA' }],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -177,7 +177,7 @@ export const products: ProductDetail[] = [
     description:
       'El Cerro la Flor vestido en halftone. Una postal gráfica del sur — vista familiar convertida en símbolo.',
     images: [
-      { src: '/images/remeras/Postales/Postales - Cerro la Flor.png', label: 'Frontal' },
+      { src: '/images/remeras/Postales/Postales - Cerro la Flor.webp', label: 'Frontal' },
     ],
     colors: [{ name: 'Crema', value: '#FAFAFA' }],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -199,8 +199,8 @@ export const products: ProductDetail[] = [
     description:
       'La costanera que conoce cualquiera que vive en Comodoro — atardeceres largos, viento y mar abierto.',
     images: [
-      { src: '/images/remeras/Postales/Postales - Costanera comodoro.png', label: 'Frontal — crema' },
-      { src: '/images/remeras/Postales/Postales - Costanera comodoro - negra.png', label: 'Frontal — negra' },
+      { src: '/images/remeras/Postales/Postales - Costanera comodoro.webp', label: 'Frontal — crema' },
+      { src: '/images/remeras/Postales/Postales - Costanera comodoro - negra.webp', label: 'Frontal — negra' },
     ],
     colors: [
       { name: 'Crema', value: '#FAFAFA' },
@@ -225,7 +225,7 @@ export const products: ProductDetail[] = [
     description:
       'Los trenes de Rada Tilly — nostalgia ferroviaria del sur, vistos con grafismo contemporáneo.',
     images: [
-      { src: '/images/remeras/Postales/Postales - trenes de rada tilly.png', label: 'Frontal' },
+      { src: '/images/remeras/Postales/Postales - trenes de rada tilly.webp', label: 'Frontal' },
     ],
     colors: [{ name: 'Crema', value: '#FAFAFA' }],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -249,7 +249,7 @@ export const products: ProductDetail[] = [
     description:
       'Build — construir. Primera palabra de la trilogía fundacional ROOTS. Tipografía y símbolo compactos.',
     images: [
-      { src: '/images/remeras/ROOTS/ROOTS - Build.png', label: 'Frontal' },
+      { src: '/images/remeras/ROOTS/ROOTS - Build.webp', label: 'Frontal' },
     ],
     colors: [{ name: 'Crema', value: '#FAFAFA' }],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -271,7 +271,7 @@ export const products: ProductDetail[] = [
     description:
       'Dream — soñar. Segunda palabra de la trilogía fundacional ROOTS. Minimalismo tipográfico.',
     images: [
-      { src: '/images/remeras/ROOTS/ROOTS - Dream.png', label: 'Frontal' },
+      { src: '/images/remeras/ROOTS/ROOTS - Dream.webp', label: 'Frontal' },
     ],
     colors: [{ name: 'Crema', value: '#FAFAFA' }],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -293,8 +293,8 @@ export const products: ProductDetail[] = [
     description:
       'Explore — explorar. Tercera palabra de la trilogía fundacional ROOTS. Disponible en dos colores.',
     images: [
-      { src: '/images/remeras/ROOTS/ROOTS - Explore - negra.png', label: 'Frontal — negra' },
-      { src: '/images/remeras/ROOTS/ROOTS - Explore - blanca.png', label: 'Frontal — blanca' },
+      { src: '/images/remeras/ROOTS/ROOTS - Explore - negra.webp', label: 'Frontal — negra' },
+      { src: '/images/remeras/ROOTS/ROOTS - Explore - blanca.webp', label: 'Frontal — blanca' },
     ],
     colors: [
       { name: 'Negro', value: '#0E0E0E' },

@@ -20,7 +20,7 @@ export function StoryStrip({
   body = 'ROOTS LIFE nace en Comodoro Rivadavia. Transformamos lo cotidiano de la Patagonia en símbolos que la gente reconoce como propios.',
   ctaText = 'Nuestra historia',
   ctaHref = '/historia',
-  bgImage = '/images/comodoro/cerro-antiguo.png',
+  bgImage = '/images/comodoro/cerro-antiguo.webp',
 }: StoryStripProps) {
   return (
     <section

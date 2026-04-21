@@ -484,7 +484,7 @@ main, footer { position: relative; z-index: 1; }
   /* Match EXACTO con el hero: solo gradient + imagen, sin halftone */
   background-image:
     linear-gradient(180deg, rgba(14, 14, 14, 0.45) 0%, rgba(14, 14, 14, 0.85) 100%),
-    url('/images/comodoro/hero-mobile.jpg');
+    url('/images/comodoro/hero-mobile.webp');
   background-size: auto, cover;
   background-position: 0 0, center;
   background-repeat: no-repeat, no-repeat;
@@ -494,7 +494,7 @@ main, footer { position: relative; z-index: 1; }
   .header-home-bg {
     background-image:
       linear-gradient(180deg, rgba(14, 14, 14, 0.25) 0%, rgba(14, 14, 14, 0.78) 100%),
-      url('/images/comodoro/hero-desktop.jpg');
+      url('/images/comodoro/hero-desktop.webp');
     background-position: 0 0, center 40%;
   }
 }

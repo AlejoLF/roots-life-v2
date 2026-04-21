@@ -53,7 +53,7 @@ export default function SerigrafiaPage() {
             minHeight: '220px',
             maxHeight: '420px',
             backgroundImage:
-              'linear-gradient(180deg, rgba(14,14,14,0.55) 0%, rgba(14,14,14,0.80) 100%), url("/images/recursos/serigrafía - horizontal.jpg")',
+              'linear-gradient(180deg, rgba(14,14,14,0.55) 0%, rgba(14,14,14,0.80) 100%), url("/images/recursos/serigrafía - horizontal.webp")',
             backgroundSize: 'cover',
             backgroundPosition: 'center 35%',
           }}
@@ -104,7 +104,7 @@ export default function SerigrafiaPage() {
               className="bg-ink-700 bg-cover bg-center rounded-[2px] shadow-md"
               style={{
                 aspectRatio: '4/5',
-                backgroundImage: 'url("/images/recursos/serigrafía - vertical.png")',
+                backgroundImage: 'url("/images/recursos/serigrafía - vertical.webp")',
               }}
               role="img"
               aria-label="Taller de serigrafía ROOTS"

@@ -22,7 +22,7 @@ type CartItem = {
 const initialItems: CartItem[] = [
   {
     id: 'pegasus',
-    image: '/images/remeras/Numerología/Numerología - Pegasus 2222 - negra.png',
+    image: '/images/remeras/Numerología/Numerología - Pegasus 2222 - negra.webp',
     caption: 'Numerología 22 22',
     title: 'Pegasus 2222',
     meta: 'Color Negro · Talle M',
@@ -32,7 +32,7 @@ const initialItems: CartItem[] = [
   },
   {
     id: 'no-bad-days',
-    image: '/images/remeras/South Coast/South Coast - No bad days.png',
+    image: '/images/remeras/South Coast/South Coast - No bad days.webp',
     caption: 'South Coast Series',
     title: 'No Bad Days',
     meta: 'Color Crema · Talle L',

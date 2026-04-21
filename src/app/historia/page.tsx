@@ -24,12 +24,12 @@ const principles = [
 ];
 
 const backstage = [
-  { src: '/images/comodoro/ola.jpg', alt: 'Ola rompiendo en la costanera', size: 'tall' },
-  { src: '/images/recursos/serigrafía - horizontal.jpg', alt: 'Pantalla de serigrafía', size: 'default' },
-  { src: '/images/comodoro/ig-03.jpg', alt: 'Panorámica de la playa', size: 'default' },
-  { src: '/images/recursos/serigrafía - vertical.png', alt: 'Estampado en prensa', size: 'tall' },
-  { src: '/images/comodoro/ig-02.jpg', alt: 'Shipwreck al atardecer', size: 'default' },
-  { src: '/images/comodoro/ig-01.jpg', alt: 'Muelle desde abajo', size: 'default' },
+  { src: '/images/comodoro/ola.webp', alt: 'Ola rompiendo en la costanera', size: 'tall' },
+  { src: '/images/recursos/serigrafía - horizontal.webp', alt: 'Pantalla de serigrafía', size: 'default' },
+  { src: '/images/comodoro/ig-03.webp', alt: 'Panorámica de la playa', size: 'default' },
+  { src: '/images/recursos/serigrafía - vertical.webp', alt: 'Estampado en prensa', size: 'tall' },
+  { src: '/images/comodoro/ig-02.webp', alt: 'Shipwreck al atardecer', size: 'default' },
+  { src: '/images/comodoro/ig-01.webp', alt: 'Muelle desde abajo', size: 'default' },
 ];
 
 export default function HistoriaPage() {
@@ -42,7 +42,7 @@ export default function HistoriaPage() {
           className="relative w-screen left-1/2 -translate-x-1/2 flex items-end min-h-[60vh] lg:min-h-[80vh] py-12 px-4 lg:py-16 lg:px-12 text-paper-100 overflow-hidden"
           style={{
             backgroundImage:
-              'linear-gradient(180deg, rgba(14,14,14,0.25) 0%, rgba(14,14,14,0.85) 100%), url("/images/comodoro/hero-desktop.jpg")',
+              'linear-gradient(180deg, rgba(14,14,14,0.25) 0%, rgba(14,14,14,0.85) 100%), url("/images/comodoro/hero-desktop.webp")',
             backgroundSize: 'cover',
             backgroundPosition: 'center 45%',
             filter: 'saturate(0.92) contrast(1.05)',
@@ -98,7 +98,7 @@ export default function HistoriaPage() {
             className="absolute inset-0"
             style={{
               backgroundImage:
-                'linear-gradient(90deg, rgba(14,14,14,0.75) 0%, rgba(14,14,14,0.45) 100%), url("/images/comodoro/cerro-antiguo.png")',
+                'linear-gradient(90deg, rgba(14,14,14,0.75) 0%, rgba(14,14,14,0.45) 100%), url("/images/comodoro/cerro-antiguo.webp")',
               backgroundSize: 'cover',
               backgroundPosition: 'center 40%',
             }}

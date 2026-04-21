@@ -17,7 +17,7 @@ export const capsules: Capsule[] = [
       'Tres códigos, tres historias. 22 22, 33 33 y 55 55 — símbolos urbanos convertidos en serigrafía.',
     products: [
       {
-        image: '/images/remeras/Numerología/Numerología - Pegasus 2222 - negra.png',
+        image: '/images/remeras/Numerología/Numerología - Pegasus 2222 - negra.webp',
         caption: 'Remera · Numerología 22 22',
         title: 'Pegasus 2222',
         price: '$24.000',
@@ -25,14 +25,14 @@ export const capsules: Capsule[] = [
         badge: 'new',
       },
       {
-        image: '/images/remeras/Numerología/Numerología - Snake 3333.png',
+        image: '/images/remeras/Numerología/Numerología - Snake 3333.webp',
         caption: 'Remera · Numerología 33 33',
         title: 'Snake 3333',
         price: '$26.000',
         href: '/producto/snake-3333',
       },
       {
-        image: '/images/remeras/Numerología/Numerología - Butterfly 5555.png',
+        image: '/images/remeras/Numerología/Numerología - Butterfly 5555.webp',
         caption: 'Remera · Numerología 55 55',
         title: 'Butterfly 5555',
         price: '$26.000',
@@ -48,7 +48,7 @@ export const capsules: Capsule[] = [
       'Días sin apuro. Sol, viento y costa — la vida al ritmo del sur patagónico. Tres piezas nacidas en la costa.',
     products: [
       {
-        image: '/images/remeras/South Coast/South Coast - No bad days.png',
+        image: '/images/remeras/South Coast/South Coast - No bad days.webp',
         caption: 'Remera · South Coast Series',
         title: 'No Bad Days',
         price: '$24.000',
@@ -56,7 +56,7 @@ export const capsules: Capsule[] = [
         badge: 'South Coast',
       },
       {
-        image: '/images/remeras/South Coast/South Coast - Chill & Repeat.png',
+        image: '/images/remeras/South Coast/South Coast - Chill & Repeat.webp',
         caption: 'Remera · South Coast Series',
         title: 'Chill & Repeat',
         price: '$24.000',
@@ -64,7 +64,7 @@ export const capsules: Capsule[] = [
         badge: 'South Coast',
       },
       {
-        image: '/images/remeras/South Coast/South Coast - Wind it.png',
+        image: '/images/remeras/South Coast/South Coast - Wind it.webp',
         caption: 'Remera · South Coast Series',
         title: 'Wind It',
         price: '$24.000',
@@ -81,7 +81,7 @@ export const capsules: Capsule[] = [
       'Paisajes de Comodoro Rivadavia traducidos a serigrafía. Cerro la Flor, costanera y trenes de Rada Tilly.',
     products: [
       {
-        image: '/images/remeras/Postales/Postales - Cerro la Flor.png',
+        image: '/images/remeras/Postales/Postales - Cerro la Flor.webp',
         caption: 'Remera · Postales',
         title: 'Cerro la Flor',
         price: '$24.000',
@@ -89,7 +89,7 @@ export const capsules: Capsule[] = [
         badge: 'Postales',
       },
       {
-        image: '/images/remeras/Postales/Postales - Costanera comodoro.png',
+        image: '/images/remeras/Postales/Postales - Costanera comodoro.webp',
         caption: 'Remera · Postales',
         title: 'Costanera Comodoro',
         price: '$24.000',
@@ -97,7 +97,7 @@ export const capsules: Capsule[] = [
         badge: 'Postales',
       },
       {
-        image: '/images/remeras/Postales/Postales - trenes de rada tilly.png',
+        image: '/images/remeras/Postales/Postales - trenes de rada tilly.webp',
         caption: 'Remera · Postales',
         title: 'Trenes de Rada Tilly',
         price: '$24.000',
@@ -114,7 +114,7 @@ export const capsules: Capsule[] = [
       'La esencia de la marca en tres palabras: Build, Dream, Explore. Piezas fundacionales.',
     products: [
       {
-        image: '/images/remeras/ROOTS/ROOTS - Build.png',
+        image: '/images/remeras/ROOTS/ROOTS - Build.webp',
         caption: 'Remera · ROOTS',
         title: 'Build',
         price: '$24.000',
@@ -122,7 +122,7 @@ export const capsules: Capsule[] = [
         badge: 'ROOTS',
       },
       {
-        image: '/images/remeras/ROOTS/ROOTS - Dream.png',
+        image: '/images/remeras/ROOTS/ROOTS - Dream.webp',
         caption: 'Remera · ROOTS',
         title: 'Dream',
         price: '$24.000',
@@ -130,7 +130,7 @@ export const capsules: Capsule[] = [
         badge: 'ROOTS',
       },
       {
-        image: '/images/remeras/ROOTS/ROOTS - Explore - negra.png',
+        image: '/images/remeras/ROOTS/ROOTS - Explore - negra.webp',
         caption: 'Remera · ROOTS',
         title: 'Explore',
         price: '$24.000',
@@ -143,14 +143,14 @@ export const capsules: Capsule[] = [
 
 export const buzos: ProductCardProps[] = [
   {
-    image: '/images/buzos/buzos roots-15.png',
+    image: '/images/buzos/buzos roots-15.webp',
     caption: 'Buzo · Tipográfico',
     title: 'Invisible Forces',
     price: '$52.000',
     href: '/producto/invisible-forces',
   },
   {
-    image: '/images/buzos/buzos roots-19.png',
+    image: '/images/buzos/buzos roots-19.webp',
     caption: 'Buzo · Locals Line',
     title: 'South Club',
     price: '$52.000',
@@ -158,28 +158,28 @@ export const buzos: ProductCardProps[] = [
     badge: 'new',
   },
   {
-    image: '/images/buzos/buzos roots-29.png',
+    image: '/images/buzos/buzos roots-29.webp',
     caption: 'Buzo · Locals Line',
     title: 'Locals Rust',
     price: '$54.000',
     href: '/producto/locals-rust',
   },
   {
-    image: '/images/buzos/buzos roots-40.png',
+    image: '/images/buzos/buzos roots-40.webp',
     caption: 'Buzo · Kobe Line',
     title: 'Kobe Sky',
     price: '$54.000',
     href: '/producto/kobe-sky',
   },
   {
-    image: '/images/buzos/buzos roots-16.png',
+    image: '/images/buzos/buzos roots-16.webp',
     caption: 'Buzo · Tipográfico',
     title: 'Invisible Forces Coal',
     price: '$52.000',
     href: '/producto/invisible-forces-coal',
   },
   {
-    image: '/images/buzos/buzos roots-37.png',
+    image: '/images/buzos/buzos roots-37.webp',
     caption: 'Buzo · Kobe Line',
     title: 'Kobe Natural',
     price: '$54.000',

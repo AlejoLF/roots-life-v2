@@ -8,12 +8,12 @@ type InstagramFeedProps = {
  */
 export function InstagramFeed({
   tiles = [
-    '/images/comodoro/hero-mobile.jpg',
-    '/images/comodoro/ig-01.jpg',
-    '/images/remeras/Numerología/Numerología - Pegasus 2222 - Close up - negra.png',
-    '/images/comodoro/ig-02.jpg',
-    '/images/buzos/buzos roots-37.png',
-    '/images/comodoro/ig-03.jpg',
+    '/images/comodoro/hero-mobile.webp',
+    '/images/comodoro/ig-01.webp',
+    '/images/remeras/Numerología/Numerología - Pegasus 2222 - Close up - negra.webp',
+    '/images/comodoro/ig-02.webp',
+    '/images/buzos/buzos roots-37.webp',
+    '/images/comodoro/ig-03.webp',
   ],
 }: InstagramFeedProps) {
   return (

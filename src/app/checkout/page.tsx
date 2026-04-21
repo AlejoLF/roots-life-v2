@@ -168,7 +168,7 @@ export default function CheckoutPage() {
 
             <ul className="list-none m-0 p-0 flex flex-col gap-4">
               <li className="grid grid-cols-[56px_1fr_auto] gap-3 items-center">
-                <div className="relative w-14 h-[70px] bg-cover bg-center rounded-[2px]" style={{ backgroundImage: 'url("/images/remeras/Numerología/Numerología - Pegasus 2222 - negra.png")' }}>
+                <div className="relative w-14 h-[70px] bg-cover bg-center rounded-[2px]" style={{ backgroundImage: 'url("/images/remeras/Numerología/Numerología - Pegasus 2222 - negra.webp")' }}>
                   <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-ink-900 text-paper-100 text-[11px] font-medium flex items-center justify-center">1</span>
                 </div>
                 <div>
@@ -179,7 +179,7 @@ export default function CheckoutPage() {
                 <p className="text-body-sm font-medium m-0">{formatARS(24000)}</p>
               </li>
               <li className="grid grid-cols-[56px_1fr_auto] gap-3 items-center">
-                <div className="relative w-14 h-[70px] bg-cover bg-center rounded-[2px]" style={{ backgroundImage: 'url("/images/remeras/South Coast/South Coast - No bad days.png")' }}>
+                <div className="relative w-14 h-[70px] bg-cover bg-center rounded-[2px]" style={{ backgroundImage: 'url("/images/remeras/South Coast/South Coast - No bad days.webp")' }}>
                   <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-ink-900 text-paper-100 text-[11px] font-medium flex items-center justify-center">1</span>
                 </div>
                 <div>

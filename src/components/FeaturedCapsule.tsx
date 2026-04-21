@@ -22,7 +22,7 @@ export function FeaturedCapsule({
   caption = 'South Coast Series',
   title = 'No Bad Days',
   description = 'Tres piezas nacidas en la costa del sur. Serigrafía a tres tintas sobre algodón orgánico. Edición limitada.',
-  image = '/images/remeras/South Coast/South Coast - No bad days.png',
+  image = '/images/remeras/South Coast/South Coast - No bad days.webp',
   imageAlt = 'Remera No Bad Days — South Coast Series',
   ctaText = 'Explorar cápsula',
   ctaHref = '/catalogo?capsula=south-coast',
