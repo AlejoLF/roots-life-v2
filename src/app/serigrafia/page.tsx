@@ -59,7 +59,7 @@ export default function SerigrafiaPage() {
           }}
         >
           <div className="relative text-center px-4 py-6 max-w-[42rem] text-paper-100">
-            <p className="text-caption text-rust-300 mb-3">Taller a pedido</p>
+            <p className="text-caption text-white/75 mb-3">Taller a pedido</p>
             <h1 className="text-display-lg m-0 mb-4" style={{ textShadow: 'var(--text-shadow-inverse)' }}>
               Serigrafía desde el sur
             </h1>
@@ -112,7 +112,7 @@ export default function SerigrafiaPage() {
               aria-label="Taller de serigrafía ROOTS"
             />
             <div className="flex flex-col gap-5">
-              <p className="text-caption text-rust-300 m-0">El taller</p>
+              <p className="text-caption text-white/75 m-0">El taller</p>
               <h2 className="text-display-lg text-paper-100 m-0" style={{ textShadow: 'var(--text-shadow-inverse)' }}>
                 Serigrafía con paciencia
               </h2>

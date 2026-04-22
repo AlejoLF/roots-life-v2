@@ -58,7 +58,7 @@ export default function HistoriaPage() {
             aria-hidden="true"
           />
           <div className="relative max-w-[75rem] w-full mx-auto">
-            <p className="text-caption text-rust-300 mb-3">Nuestra historia</p>
+            <p className="text-caption text-white/75 mb-3">Nuestra historia</p>
             <h1
               className="font-display font-black uppercase text-paper-100 m-0 mb-5 max-w-[18ch]"
               style={{
@@ -115,7 +115,7 @@ export default function HistoriaPage() {
             aria-hidden="true"
           />
           <div className="relative max-w-[90rem] mx-auto px-4 text-center">
-            <p className="text-caption text-rust-300 mb-4">Desde el sur</p>
+            <p className="text-caption text-white/75 mb-4">Desde el sur</p>
             <p
               className="font-display font-normal uppercase text-paper-100 m-0 tracking-tight"
               style={{
@@ -152,7 +152,7 @@ export default function HistoriaPage() {
         <section className="bg-ink-900 text-paper-100 halftone-dark py-16 lg:py-16 px-4 md:px-8 lg:px-12">
           <div className="max-w-[75rem] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 lg:gap-16 items-center">
             <div>
-              <p className="text-caption text-rust-300 mb-4">Filosofía</p>
+              <p className="text-caption text-white/75 mb-4">Filosofía</p>
               <p
                 className="font-display font-bold uppercase text-paper-100 leading-tight mb-6"
                 style={{

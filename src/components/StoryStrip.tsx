@@ -38,7 +38,7 @@ export function StoryStrip({
         aria-hidden="true"
       />
       <div className="relative max-w-[32rem] lg:ml-auto">
-        <p className="text-caption text-rust-300 mb-3">{caption}</p>
+        <p className="text-caption text-white/75 mb-3">{caption}</p>
         <h2
           id="story-title"
           className="font-display font-bold uppercase text-paper-100 mb-4"
