@@ -67,7 +67,7 @@ export function ProductCard({
           </span>
         )}
       </div>
-      <p className="text-caption m-0 mb-1">{caption}</p>
+      <p className="text-caption text-ink-500 m-0 mb-1">{caption}</p>
       <h3 className="text-h4 m-0 mb-1 group-hover:text-rust-500 transition-colors">
         {title}
       </h3>

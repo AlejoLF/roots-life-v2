@@ -414,7 +414,9 @@ main, footer { position: relative; z-index: 1; }
   line-height: var(--lh-tight);
   letter-spacing: var(--tr-wide);
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  /* color: intencionalmente sin definir — se combina con text-ink-500
+     (para fondo claro) o text-white/75 (para fondo oscuro) en el JSX.
+     Así evitamos que esta clase pise las utilities de color de Tailwind. */
 }
 
 .text-stamp {

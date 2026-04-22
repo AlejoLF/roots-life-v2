@@ -98,7 +98,7 @@ export default function GraciasPage() {
                   <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-ink-900 text-paper-100 text-[11px] font-medium flex items-center justify-center">1</span>
                 </div>
                 <div>
-                  <p className="text-caption m-0">Numerología 22 22</p>
+                  <p className="text-caption text-ink-500 m-0">Numerología 22 22</p>
                   <p className="text-body-sm font-medium m-0">Pegasus 2222</p>
                   <p className="text-body-sm text-ink-500 m-0">Negro · M</p>
                 </div>
@@ -109,7 +109,7 @@ export default function GraciasPage() {
                   <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-ink-900 text-paper-100 text-[11px] font-medium flex items-center justify-center">1</span>
                 </div>
                 <div>
-                  <p className="text-caption m-0">South Coast Series</p>
+                  <p className="text-caption text-ink-500 m-0">South Coast Series</p>
                   <p className="text-body-sm font-medium m-0">No Bad Days</p>
                   <p className="text-body-sm text-ink-500 m-0">Crema · L</p>
                 </div>
