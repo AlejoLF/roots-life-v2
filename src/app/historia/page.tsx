@@ -76,7 +76,7 @@ export default function HistoriaPage() {
               ROOTS LIFE nace en Comodoro Rivadavia. Entre el viento, la costa y el cerro
               — un lenguaje urbano con raíces patagónicas.
             </p>
-            <p className="text-stamp text-paper-300">
+            <p className="text-stamp text-paper-200">
               Chubut · Patagonia · Estd 2024
             </p>
           </div>

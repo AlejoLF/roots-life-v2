@@ -273,7 +273,7 @@ function MobileDrawer({
             </a>
           </div>
 
-          <p className="text-[10px] font-medium uppercase tracking-widest text-paper-400 pt-3 border-t border-ink-800 m-0">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-paper-200 opacity-80 pt-3 border-t border-ink-800 m-0">
             Chubut · Patagonia · Estd 2024
           </p>
         </div>

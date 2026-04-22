@@ -127,10 +127,10 @@ export default function SerigrafiaPage() {
               <ul className="list-none p-0 m-0 grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-3 md:gap-x-5 border-t border-ink-700 pt-4 mt-2">
                 {tallerSpecs.map((spec) => (
                   <li key={spec.label}>
-                    <strong className="block text-[9px] md:text-[10px] font-medium uppercase tracking-widest text-paper-400 mb-1">
+                    <strong className="block text-[9px] md:text-[10px] font-medium uppercase tracking-widest text-paper-200 mb-1 opacity-80">
                       {spec.label}
                     </strong>
-                    <span className="text-body-sm text-paper-200">{spec.value}</span>
+                    <span className="text-body-sm text-paper-100">{spec.value}</span>
                   </li>
                 ))}
               </ul>

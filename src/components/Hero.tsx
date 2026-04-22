@@ -82,7 +82,7 @@ export function Hero({
         </div>
 
         {/* Subtitle — 2 líneas editoriales */}
-        <p className="text-body-sm text-paper-300 mb-8 max-w-[24rem] mx-auto leading-[1.5] tracking-[0.02em]">
+        <p className="text-body-sm text-paper-200 mb-8 max-w-[24rem] mx-auto leading-[1.5] tracking-[0.02em]">
           {subtitleLine1}
           <br />
           {subtitleLine2}
@@ -96,7 +96,7 @@ export function Hero({
         </div>
 
         {/* Stamp */}
-        <p className="text-stamp text-paper-400">{stamp}</p>
+        <p className="text-stamp text-paper-200">{stamp}</p>
       </div>
     </section>
   );

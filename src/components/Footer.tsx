@@ -72,7 +72,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="w-full max-w-[75rem] mx-auto mt-10 pt-6 border-t border-ink-700 flex flex-wrap gap-4 justify-between items-center text-stamp text-paper-400">
+      <div className="w-full max-w-[75rem] mx-auto mt-10 pt-6 border-t border-ink-700 flex flex-wrap gap-4 justify-between items-center text-stamp text-paper-200 opacity-80">
         <span>Chubut · Patagonia · Estd 2024</span>
         <span>© 2026 ROOTS LIFE</span>
       </div>
