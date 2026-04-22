@@ -59,14 +59,24 @@ export default function HistoriaPage() {
           />
           <div className="relative max-w-[75rem] w-full mx-auto">
             <p className="text-caption text-rust-300 mb-3">Nuestra historia</p>
-            <h1 className="text-display-hero text-paper-100 m-0 mb-5 max-w-[18ch]">
+            <h1
+              className="font-display font-black uppercase text-paper-100 m-0 mb-5 max-w-[18ch]"
+              style={{
+                fontSize: 'clamp(2rem, 5vw + 0.5rem, 4rem)',
+                lineHeight: 1,
+                letterSpacing: '-0.025em',
+                textShadow: 'var(--text-shadow-inverse)',
+              }}
+            >
               Nacidos<br />en el sur
             </h1>
-            <p className="text-body-lg text-paper-200 leading-relaxed max-w-[40ch] mb-8">
+            <p className="text-paper-200 leading-relaxed max-w-[40ch] mb-8"
+              style={{ fontSize: 'clamp(0.95rem, 0.5vw + 0.85rem, 1.05rem)' }}
+            >
               ROOTS LIFE nace en Comodoro Rivadavia. Entre el viento, la costa y el cerro
               — un lenguaje urbano con raíces patagónicas.
             </p>
-            <p className="text-stamp text-paper-400">
+            <p className="text-stamp text-paper-300">
               Chubut · Patagonia · Estd 2024
             </p>
           </div>
@@ -107,13 +117,16 @@ export default function HistoriaPage() {
           <div className="relative max-w-[90rem] mx-auto px-4 text-center">
             <p className="text-caption text-rust-300 mb-4">Desde el sur</p>
             <p
-              className="font-display font-normal uppercase text-paper-100 m-0 leading-[1.15] tracking-tight"
+              className="font-display font-normal uppercase text-paper-100 m-0 tracking-tight"
               style={{
-                fontSize: 'clamp(0.95rem, 3.2vw, 1.5rem)',
+                fontSize: 'clamp(1.15rem, 3.4vw, 1.85rem)',
+                lineHeight: 1.2,
                 textShadow: 'var(--text-shadow-inverse)',
               }}
             >
-              El sur no es un lugar. Es una forma de estar parado.
+              El sur, no es un lugar.
+              <br />
+              Es una forma de estar parado.
             </p>
           </div>
         </section>

@@ -56,12 +56,12 @@ export function FeaturedCapsule({
           aria-hidden="true"
         />
 
-        {/* Overlay oscuro para contraste — gradient sutil con más oscuridad abajo */}
+        {/* Overlay oscuro para contraste — más liviano para ver más el video */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'linear-gradient(180deg, rgba(14,14,14,0.55) 0%, rgba(14,14,14,0.72) 100%)',
+              'linear-gradient(180deg, rgba(14,14,14,0.30) 0%, rgba(14,14,14,0.50) 100%)',
           }}
           aria-hidden="true"
         />
@@ -82,12 +82,19 @@ export function FeaturedCapsule({
           <p className="text-caption text-rust-300 mb-2">{caption}</p>
           <h2
             id="capsule-title"
-            className="text-display-lg text-paper-100 mb-4"
-            style={{ textShadow: 'var(--text-shadow-inverse)' }}
+            className="font-display font-bold uppercase text-paper-100 mb-4"
+            style={{
+              fontSize: 'clamp(1.5rem, 2.5vw + 0.5rem, 2.5rem)',
+              lineHeight: 1.1,
+              letterSpacing: '-0.01em',
+              textShadow: 'var(--text-shadow-inverse)',
+            }}
           >
             {title}
           </h2>
-          <p className="text-body-lg text-paper-200 leading-relaxed mb-6 max-w-[28rem]">
+          <p className="text-paper-200 leading-relaxed mb-6 max-w-[28rem]"
+            style={{ fontSize: 'clamp(0.95rem, 0.5vw + 0.85rem, 1.05rem)' }}
+          >
             {description}
           </p>
           <div>

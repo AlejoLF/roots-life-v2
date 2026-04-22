@@ -39,12 +39,23 @@ export function StoryStrip({
       />
       <div className="relative max-w-[32rem] lg:ml-auto">
         <p className="text-caption text-rust-300 mb-3">{caption}</p>
-        <h2 id="story-title" className="text-display-lg text-paper-100 mb-4"
-          style={{ textShadow: 'var(--text-shadow-inverse)' }}
+        <h2
+          id="story-title"
+          className="font-display font-bold uppercase text-paper-100 mb-4"
+          style={{
+            fontSize: 'clamp(1.5rem, 2.5vw + 0.5rem, 2.5rem)',
+            lineHeight: 1.1,
+            letterSpacing: '-0.01em',
+            textShadow: 'var(--text-shadow-inverse)',
+          }}
         >
           {title}
         </h2>
-        <p className="text-body-lg text-paper-200 leading-relaxed mb-6">{body}</p>
+        <p className="text-paper-200 leading-relaxed mb-6"
+          style={{ fontSize: 'clamp(0.95rem, 0.5vw + 0.85rem, 1.05rem)' }}
+        >
+          {body}
+        </p>
         <Button href={ctaHref} variant="ghost-inverse" size="md">
           {ctaText} <span aria-hidden>→</span>
         </Button>

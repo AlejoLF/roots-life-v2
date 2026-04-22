@@ -49,8 +49,8 @@
 
   --paper-100: #FFFFFF;
   --paper-200: #FAFAFA;
-  --paper-300: #F3EEDF;
-  --paper-400: #E3DBC8;
+  --paper-300: #F5F0E2;
+  --paper-400: #E9E2CE;
 
   --rust-100: #F6D4C5;
   --rust-300: #E89274;
@@ -486,7 +486,7 @@ main, footer { position: relative; z-index: 1; }
     linear-gradient(180deg, rgba(14, 14, 14, 0.45) 0%, rgba(14, 14, 14, 0.85) 100%),
     url('/images/comodoro/hero-mobile.webp');
   background-size: auto, cover;
-  background-position: 0 0, center;
+  background-position: 0 0, 75% center;
   background-repeat: no-repeat, no-repeat;
   background-attachment: fixed, fixed;
 }

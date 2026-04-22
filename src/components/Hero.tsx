@@ -27,14 +27,14 @@ export function Hero({
     >
       <h1 id="hero-title" className="sr-only">ROOTS LIFE</h1>
 
-      {/* Mobile: ola B&N */}
+      {/* Mobile: ola B&N — offset a la derecha para dejar el faro fuera del texto */}
       <div
         className="absolute inset-0 lg:hidden"
         style={{
           backgroundImage:
             'linear-gradient(180deg, rgba(14,14,14,0.45) 0%, rgba(14,14,14,0.85) 100%), url("/images/comodoro/hero-mobile.webp")',
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: '75% center',
           filter: 'grayscale(100%) contrast(1.05)',
         }}
         aria-hidden="true"
