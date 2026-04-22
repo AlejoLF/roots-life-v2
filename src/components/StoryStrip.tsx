@@ -51,7 +51,7 @@ export function StoryStrip({
         >
           {title}
         </h2>
-        <p className="text-paper-200 leading-relaxed mb-6"
+        <p className="text-white/90 leading-relaxed mb-6"
           style={{ fontSize: 'clamp(0.95rem, 0.5vw + 0.85rem, 1.05rem)' }}
         >
           {body}

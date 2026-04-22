@@ -251,7 +251,7 @@ function MobileDrawer({
               href="https://instagram.com/rootslife.cr"
               target="_blank"
               rel="noopener"
-              className="inline-flex items-center gap-3 text-paper-200 text-sm hover:text-paper-100"
+              className="inline-flex items-center gap-3 text-white/90 text-sm hover:text-paper-100"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -264,7 +264,7 @@ function MobileDrawer({
               href="https://wa.me/5492974000000"
               target="_blank"
               rel="noopener"
-              className="inline-flex items-center gap-3 text-paper-200 text-sm hover:text-paper-100"
+              className="inline-flex items-center gap-3 text-white/90 text-sm hover:text-paper-100"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20.52 3.48A11.88 11.88 0 0 0 12.06 0C5.5 0 .17 5.33.17 11.9c0 2.1.55 4.15 1.6 5.96L0 24l6.33-1.66a11.88 11.88 0 0 0 5.72 1.46c6.56 0 11.89-5.33 11.89-11.9 0-3.18-1.24-6.17-3.43-8.42z" />
@@ -273,7 +273,7 @@ function MobileDrawer({
             </a>
           </div>
 
-          <p className="text-[10px] font-medium uppercase tracking-widest text-paper-200 opacity-80 pt-3 border-t border-ink-800 m-0">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-white/80 pt-3 border-t border-ink-800 m-0">
             Chubut · Patagonia · Estd 2024
           </p>
         </div>

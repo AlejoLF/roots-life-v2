@@ -148,14 +148,14 @@ export default function GraciasPage() {
                       : 'border-ink-700'
                   }`}
                 >
-                  <p className={`text-[10px] font-medium uppercase tracking-widest mb-3 ${step.status === 'active' ? 'text-rust-500' : step.status === 'done' ? 'text-moss-500' : 'text-paper-200 opacity-80'}`}>
+                  <p className={`text-[10px] font-medium uppercase tracking-widest mb-3 ${step.status === 'active' ? 'text-rust-500' : step.status === 'done' ? 'text-moss-500' : 'text-white/80'}`}>
                     {step.num}
                     {step.status === 'done' && ' ✓'}
                     {step.status === 'active' && ' · Procesando'}
                   </p>
                   <h3 className="text-h3 text-paper-100 m-0 mb-2">{step.title}</h3>
-                  <p className="text-body-sm text-paper-200 opacity-80 m-0 mb-3">{step.date}</p>
-                  <p className="text-body-sm text-paper-200 m-0">{step.desc}</p>
+                  <p className="text-body-sm text-white/80 m-0 mb-3">{step.date}</p>
+                  <p className="text-body-sm text-white/90 m-0">{step.desc}</p>
                 </div>
               ))}
             </div>

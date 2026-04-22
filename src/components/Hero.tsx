@@ -27,14 +27,15 @@ export function Hero({
     >
       <h1 id="hero-title" className="sr-only">ROOTS LIFE</h1>
 
-      {/* Mobile: ola B&N — offset a la derecha para dejar el faro fuera del texto */}
+      {/* Mobile: ola B&N — offset a la derecha + zoom 20% dentro del formato */}
       <div
         className="absolute inset-0 lg:hidden"
         style={{
           backgroundImage:
             'linear-gradient(180deg, rgba(14,14,14,0.45) 0%, rgba(14,14,14,0.85) 100%), url("/images/comodoro/hero-mobile.webp")',
-          backgroundSize: 'cover',
-          backgroundPosition: '75% center',
+          backgroundSize: 'auto, 120%',
+          backgroundPosition: '0 0, 75% center',
+          backgroundRepeat: 'no-repeat, no-repeat',
           filter: 'grayscale(100%) contrast(1.05)',
         }}
         aria-hidden="true"
@@ -82,7 +83,7 @@ export function Hero({
         </div>
 
         {/* Subtitle — 2 líneas editoriales */}
-        <p className="text-body-sm text-paper-200 mb-8 max-w-[24rem] mx-auto leading-[1.5] tracking-[0.02em]">
+        <p className="text-body-sm text-white/90 mb-8 max-w-[24rem] mx-auto leading-[1.5] tracking-[0.02em]">
           {subtitleLine1}
           <br />
           {subtitleLine2}
@@ -96,7 +97,7 @@ export function Hero({
         </div>
 
         {/* Stamp */}
-        <p className="text-stamp text-paper-200">{stamp}</p>
+        <p className="text-stamp text-white/85">{stamp}</p>
       </div>
     </section>
   );

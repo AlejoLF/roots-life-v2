@@ -32,7 +32,7 @@ export function SerigrafiaCTA({
         >
           {title}
         </h2>
-        <p className="text-body-lg text-paper-200 leading-relaxed mb-6">{body}</p>
+        <p className="text-body-lg text-white/90 leading-relaxed mb-6">{body}</p>
         <Button href={ctaHref} variant="accent" size="md">
           {ctaText} <span aria-hidden>→</span>
         </Button>

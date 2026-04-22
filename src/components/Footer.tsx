@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="relative z-10 bg-ink-900 text-paper-200 px-4 md:px-8 lg:px-12 pt-16 pb-10">
+    <footer className="relative z-10 bg-ink-900 text-white/90 px-4 md:px-8 lg:px-12 pt-16 pb-10">
       <div className="w-full max-w-[75rem] mx-auto grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-10 lg:gap-16">
         <div>
           <span
@@ -72,7 +72,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="w-full max-w-[75rem] mx-auto mt-10 pt-6 border-t border-ink-700 flex flex-wrap gap-4 justify-between items-center text-stamp text-paper-200 opacity-80">
+      <div className="w-full max-w-[75rem] mx-auto mt-10 pt-6 border-t border-ink-700 flex flex-wrap gap-4 justify-between items-center text-stamp text-white/80">
         <span>Chubut · Patagonia · Estd 2024</span>
         <span>© 2026 ROOTS LIFE</span>
       </div>

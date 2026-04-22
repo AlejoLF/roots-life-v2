@@ -70,13 +70,13 @@ export default function HistoriaPage() {
             >
               Nacidos<br />en el sur
             </h1>
-            <p className="text-paper-200 leading-relaxed max-w-[40ch] mb-8"
+            <p className="text-white/90 leading-relaxed max-w-[40ch] mb-8"
               style={{ fontSize: 'clamp(0.95rem, 0.5vw + 0.85rem, 1.05rem)' }}
             >
               ROOTS LIFE nace en Comodoro Rivadavia. Entre el viento, la costa y el cerro
               — un lenguaje urbano con raíces patagónicas.
             </p>
-            <p className="text-stamp text-paper-200">
+            <p className="text-stamp text-white/85">
               Chubut · Patagonia · Estd 2024
             </p>
           </div>
@@ -162,14 +162,14 @@ export default function HistoriaPage() {
               >
                 Si el diseño necesita explicación,<br />no está terminado.
               </p>
-              <p className="text-body-lg text-paper-200 leading-relaxed max-w-[42ch]">
+              <p className="text-body-lg text-white/90 leading-relaxed max-w-[42ch]">
                 Cada pieza se piensa desde lo cotidiano. Un símbolo vale cuando la gente
                 lo reconoce como propio sin que nadie se lo tenga que explicar.
               </p>
             </div>
             <ul className="list-none m-0 p-0 grid grid-cols-1 gap-2">
               {principles.map((p, i) => (
-                <li key={i} className="flex items-start gap-3 p-3 border border-ink-700 rounded-[2px] text-[11px] lg:text-xs font-medium uppercase tracking-wider text-paper-200">
+                <li key={i} className="flex items-start gap-3 p-3 border border-ink-700 rounded-[2px] text-[11px] lg:text-xs font-medium uppercase tracking-wider text-white/90">
                   <span className="text-rust-500 font-semibold flex-shrink-0">0{i + 1}</span>
                   <span>{p}</span>
                 </li>
