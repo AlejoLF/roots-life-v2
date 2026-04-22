@@ -481,7 +481,10 @@ main, footer { position: relative; z-index: 1; }
    Al scrollear: fade-in del halftone overlay + sombra paralela.
    ===================================================================== */
 .header-home-bg {
-  /* Match EXACTO con el hero: solo gradient + imagen, sin halftone */
+  /* Color de respaldo SIEMPRE — evita header vacío si la imagen no carga
+     o si background-attachment: fixed falla (iOS Safari, algunos Android). */
+  background-color: #1b1e33;
+  /* Match con el hero: gradient + imagen, attached fixed. */
   background-image:
     linear-gradient(180deg, rgba(14, 14, 14, 0.45) 0%, rgba(14, 14, 14, 0.85) 100%),
     url('/images/comodoro/hero-mobile.webp');
@@ -496,6 +499,18 @@ main, footer { position: relative; z-index: 1; }
       linear-gradient(180deg, rgba(14, 14, 14, 0.25) 0%, rgba(14, 14, 14, 0.78) 100%),
       url('/images/comodoro/hero-desktop.webp');
     background-position: 0 0, center 40%;
+  }
+}
+/* iOS Safari / algunos Android: background-attachment: fixed se ignora.
+   Forzamos un fondo sólido que matchee con el navy-plum del hero. */
+@media (hover: none) and (pointer: coarse) {
+  .header-home-bg {
+    background-image:
+      radial-gradient(rgba(247, 243, 234, 0.08) 1.2px, transparent 1.6px),
+      linear-gradient(180deg, #1e2138 0%, #181a2c 100%);
+    background-size: 7px 7px, 100% 100%;
+    background-position: 0 0, 0 0;
+    background-attachment: scroll, scroll;
   }
 }
 
