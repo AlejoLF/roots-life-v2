@@ -53,6 +53,7 @@
   --paper-400: #E9E2CE;
 
   --rust-100: #F6D4C5;
+  --rust-200: #F2BCA5;
   --rust-300: #E89274;
   --rust-500: #D85A3A;
   --rust-700: #A03E24;
@@ -239,6 +240,7 @@
   --color-paper-400: var(--paper-400);
 
   --color-rust-100: var(--rust-100);
+  --color-rust-200: var(--rust-200);
   --color-rust-300: var(--rust-300);
   --color-rust-500: var(--rust-500);
   --color-rust-700: var(--rust-700);

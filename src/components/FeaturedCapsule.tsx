@@ -79,7 +79,7 @@ export function FeaturedCapsule({
 
         {/* Contenido */}
         <div className="relative z-10 flex flex-col justify-center py-10 px-6 lg:py-16 lg:px-12 max-w-[42rem]">
-          <p className="text-caption text-white/75 mb-2">{caption}</p>
+          <p className="text-caption text-rust-200 mb-2">{caption}</p>
           <h2
             id="capsule-title"
             className="font-display font-bold uppercase text-paper-100 mb-4"

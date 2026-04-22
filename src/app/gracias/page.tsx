@@ -133,7 +133,7 @@ export default function GraciasPage() {
         <section className="bg-ink-900 text-paper-100 halftone-dark py-12 lg:py-16 px-4 md:px-8 lg:px-12">
           <div className="max-w-[75rem] mx-auto">
             <div className="text-center mb-10">
-              <p className="text-caption text-white/75 mb-2">Próximos pasos</p>
+              <p className="text-caption text-rust-200 mb-2">Próximos pasos</p>
               <h2 className="text-display-lg m-0" style={{ textShadow: 'var(--text-shadow-inverse)' }}>
                 Qué sigue
               </h2>
