@@ -27,27 +27,27 @@ export function Hero({
     >
       <h1 id="hero-title" className="sr-only">ROOTS LIFE</h1>
 
-      {/* Mobile: ola B&N — offset a la derecha + zoom 20% dentro del formato */}
+      {/* Mobile: ola B&N — matchea con el header (mismo sizing y position) */}
       <div
         className="absolute inset-0 lg:hidden"
         style={{
           backgroundImage:
             'linear-gradient(180deg, rgba(14,14,14,0.45) 0%, rgba(14,14,14,0.85) 100%), url("/images/comodoro/hero-mobile.webp")',
           backgroundSize: 'auto, 120%',
-          backgroundPosition: '0 0, 75% center',
+          backgroundPosition: '0 0, 75% top',
           backgroundRepeat: 'no-repeat, no-repeat',
           filter: 'grayscale(100%) contrast(1.05)',
         }}
         aria-hidden="true"
       />
-      {/* Desktop: atardecer color */}
+      {/* Desktop: atardecer color — matchea con el header (cover center top) */}
       <div
         className="absolute inset-0 hidden lg:block"
         style={{
           backgroundImage:
             'linear-gradient(180deg, rgba(14,14,14,0.25) 0%, rgba(14,14,14,0.78) 100%), url("/images/comodoro/hero-desktop.webp")',
           backgroundSize: 'cover',
-          backgroundPosition: 'center 40%',
+          backgroundPosition: 'center top',
           filter: 'saturate(0.95) contrast(1.05)',
         }}
         aria-hidden="true"
