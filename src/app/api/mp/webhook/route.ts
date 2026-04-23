@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createHmac, timingSafeEqual } from 'crypto';
 import { getPayment } from '@/lib/mercadopago';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { markDiscountCodeUsed, validateDiscountCode } from '@/lib/discount';
@@ -14,6 +15,52 @@ import { markDiscountCodeUsed, validateDiscountCode } from '@/lib/discount';
  * porque validamos status transitions antes de escribir.
  */
 
+/**
+ * Valida firma del webhook según docs MP.
+ * Manifest: id:{dataId};request-id:{reqId};ts:{ts};
+ * HMAC-SHA256 con MP_WEBHOOK_SECRET, compara con v1.
+ * Si el secret no está configurado, NO valida (modo dev). En prod debería estar siempre.
+ */
+function isValidSignature(
+  req: NextRequest,
+  dataId: string | undefined,
+): boolean {
+  const secret = process.env.MP_WEBHOOK_SECRET;
+  if (!secret) {
+    console.warn('[mp-webhook] MP_WEBHOOK_SECRET no configurado — signature NO validada');
+    return true;
+  }
+
+  const xSignature = req.headers.get('x-signature');
+  const xRequestId = req.headers.get('x-request-id');
+  if (!xSignature || !xRequestId) return false;
+
+  const parts = xSignature.split(',').reduce<Record<string, string>>(
+    (acc, part) => {
+      const [k, v] = part.split('=').map((s) => s.trim());
+      if (k && v) acc[k] = v;
+      return acc;
+    },
+    {},
+  );
+
+  const ts = parts.ts;
+  const v1 = parts.v1;
+  if (!ts || !v1) return false;
+
+  const manifest = `id:${dataId ?? ''};request-id:${xRequestId};ts:${ts};`;
+  const computed = createHmac('sha256', secret).update(manifest).digest('hex');
+
+  try {
+    return timingSafeEqual(
+      Buffer.from(computed, 'hex'),
+      Buffer.from(v1, 'hex'),
+    );
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(req: NextRequest) {
   let body: unknown;
   try {
@@ -26,15 +73,28 @@ export async function POST(req: NextRequest) {
   const type = payload.type ?? payload.action?.split('.')[0];
   const resourceId = payload.data?.id;
 
-  if (!resourceId) {
+  // Algunos webhooks de MP también traen data.id en query string
+  const urlDataId = req.nextUrl.searchParams.get('data.id') ?? undefined;
+  const effectiveId = resourceId ?? urlDataId;
+
+  // Validación de firma
+  if (!isValidSignature(req, effectiveId)) {
+    console.warn('[mp-webhook] signature inválida');
+    return NextResponse.json(
+      { ok: false, error: 'Invalid signature' },
+      { status: 401 },
+    );
+  }
+
+  if (!effectiveId) {
     return NextResponse.json({ ok: true, noted: 'no-id' });
   }
 
-  console.log('[mp-webhook]', type, resourceId);
+  console.log('[mp-webhook]', type, effectiveId);
 
   try {
     if (type === 'payment') {
-      await handlePayment(String(resourceId));
+      await handlePayment(String(effectiveId));
     }
     // merchant_order / shipment updates: llegan a /api/mp/webhook también
     // y los procesamos en Fase 5.
