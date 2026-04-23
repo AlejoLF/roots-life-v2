@@ -14,28 +14,23 @@ type CapsuleView = {
 
 type Props = {
   capsules: CapsuleView[];
-  buzos: ProductCardProps[];
 };
 
-type TabId = string;
-
-const BUZOS_ID = 'buzos';
 const ALL_ID = 'all';
 
-export function CatalogoClient({ capsules, buzos }: Props) {
-  const [activeTab, setActiveTab] = useState<TabId>(ALL_ID);
+export function CatalogoClient({ capsules }: Props) {
+  const [activeTab, setActiveTab] = useState<string>(ALL_ID);
 
   const tabs = useMemo(
     () => [
       { id: ALL_ID, label: 'Todos' },
       ...capsules.map((c) => ({ id: c.id, label: c.name })),
-      { id: BUZOS_ID, label: 'Buzos' },
     ],
     [capsules],
   );
 
   const showAll = activeTab === ALL_ID;
-  const totalRemeras = capsules.reduce((n, c) => n + c.products.length, 0);
+  const totalProductos = capsules.reduce((n, c) => n + c.products.length, 0);
 
   return (
     <>
@@ -93,25 +88,9 @@ export function CatalogoClient({ capsules, buzos }: Props) {
             );
           })}
 
-          {(showAll || activeTab === BUZOS_ID) && buzos.length > 0 && (
-            <CapsuleGroup
-              capsuleId="buzos"
-              caption="Sección · Línea estable"
-              title="Buzos"
-              description="Líneas Tipográfica, Locals y Kobe. Prendas de siempre, por fuera de las cápsulas."
-            >
-              <CapsuleGrid>
-                {buzos.map((b) => (
-                  <ProductCard key={b.href} {...b} />
-                ))}
-              </CapsuleGrid>
-            </CapsuleGroup>
-          )}
-
           <p className="text-stamp text-ink-500 text-center mt-16 lg:mt-24">
-            {capsules.length} {capsules.length === 1 ? 'cápsula' : 'cápsulas'} · {totalRemeras}{' '}
-            {totalRemeras === 1 ? 'remera' : 'remeras'} · {buzos.length}{' '}
-            {buzos.length === 1 ? 'buzo' : 'buzos'}
+            {capsules.length} {capsules.length === 1 ? 'cápsula' : 'cápsulas'} · {totalProductos}{' '}
+            {totalProductos === 1 ? 'producto' : 'productos'}
           </p>
         </div>
       </section>

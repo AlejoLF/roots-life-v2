@@ -2,12 +2,11 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { CatalogoClient } from '@/components/CatalogoClient';
 import { getCapsulesWithProducts, productToCardProps } from '@/lib/products';
-import { buzos } from '@/data/catalog';
 
 export const metadata = {
   title: 'Catálogo',
   description:
-    'Colección completa de ROOTS LIFE — cápsulas, remeras y buzos. Serigrafía a mano desde Comodoro Rivadavia.',
+    'Colección completa de ROOTS LIFE — remeras y buzos en ediciones cortas. Serigrafía a mano desde Comodoro Rivadavia.',
 };
 
 export default async function CatalogoPage() {
@@ -25,7 +24,7 @@ export default async function CatalogoPage() {
     <>
       <Header />
       <main className="relative z-10 pt-[58px] lg:pt-[72px] flex-1">
-        <CatalogoClient capsules={capsules} buzos={buzos} />
+        <CatalogoClient capsules={capsules} />
       </main>
       <Footer />
     </>

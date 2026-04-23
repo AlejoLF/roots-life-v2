@@ -208,6 +208,8 @@ export async function getFeaturedProducts(max = 4): Promise<ProductDetail[]> {
 
 /**
  * Convierte ProductDetail al shape que espera ProductCard (grid views).
+ * Usa la caption del producto tal cual viene de la Sheet — le da al cliente
+ * control total sobre qué se ve en cada tarjeta.
  */
 export function productToCardProps(p: ProductDetail): {
   image: string;
@@ -217,10 +219,9 @@ export function productToCardProps(p: ProductDetail): {
   href: string;
   badge?: string;
 } {
-  const shortCapsule = p.capsuleName.split(' · ')[0];
   return {
     image: p.images[0]?.src ?? '',
-    caption: `Remera · ${shortCapsule}`,
+    caption: p.caption,
     title: p.title,
     price: p.price,
     href: `/producto/${p.slug}`,
