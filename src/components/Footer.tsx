@@ -74,6 +74,11 @@ export function Footer() {
 
       <div className="w-full max-w-[75rem] mx-auto mt-10 pt-6 border-t border-ink-700 flex flex-wrap gap-4 justify-between items-center text-stamp text-white/80">
         <span>Chubut · Patagonia · Estd 2024</span>
+        <div className="flex flex-wrap gap-4">
+          <Link href="/terminos" className="hover:text-paper-100 transition-colors">Términos</Link>
+          <Link href="/privacidad" className="hover:text-paper-100 transition-colors">Privacidad</Link>
+          <Link href="/cookies" className="hover:text-paper-100 transition-colors">Cookies</Link>
+        </div>
         <span>© 2026 ROOTS LIFE</span>
       </div>
     </footer>
