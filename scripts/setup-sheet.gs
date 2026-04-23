@@ -371,20 +371,21 @@ function removeDefaultSheet_(ss) {
 // ─────────────────────────────────────────────────────────
 // EMAILS — setup independiente. Ejecutar UNA sola vez.
 // No toca capsulas ni productos.
+// Si la pestaña ya existe, ejecutá extendEmailsTab() para agregar columnas nuevas.
 // ─────────────────────────────────────────────────────────
 function setupEmailsTab() {
   var ss = SpreadsheetApp.getActive();
   var tab = ss.getSheetByName('emails');
   if (tab) {
     SpreadsheetApp.getUi().alert(
-      'La pestaña "emails" ya existe. No hice cambios.',
+      'La pestaña "emails" ya existe. Para agregar las columnas nuevas (used_at) ejecutá extendEmailsTab().',
     );
     return;
   }
 
   tab = ss.insertSheet('emails');
 
-  var headers = ['timestamp', 'email', 'source', 'discount_code', 'user_registered'];
+  var headers = ['timestamp', 'email', 'source', 'discount_code', 'used_at', 'user_registered'];
   tab.getRange(1, 1, 1, headers.length).setValues([headers]);
 
   // Header style
@@ -398,19 +399,64 @@ function setupEmailsTab() {
   tab.setColumnWidth(1, 180); // timestamp
   tab.setColumnWidth(2, 280); // email
   tab.setColumnWidth(3, 140); // source
-  tab.setColumnWidth(4, 140); // discount_code
-  tab.setColumnWidth(5, 120); // user_registered
+  tab.setColumnWidth(4, 180); // discount_code
+  tab.setColumnWidth(5, 180); // used_at
+  tab.setColumnWidth(6, 120); // user_registered
 
   // Notas
   tab.getRange('A1').setNote('Fecha/hora de la suscripción (ISO 8601 UTC).');
   tab.getRange('C1').setNote('De dónde vino el email: newsletter, checkout, signup.');
-  tab.getRange('D1').setNote('Código de descuento generado para primera compra (si aplica).');
-  tab.getRange('E1').setNote('TRUE si el email ya corresponde a un usuario registrado en el sitio.');
+  tab.getRange('D1').setNote('Código de descuento único generado para esta persona.');
+  tab.getRange('E1').setNote('Fecha/hora en que el código fue usado en una compra. Vacío = no usado.');
+  tab.getRange('F1').setNote('TRUE si el email ya corresponde a un usuario registrado en el sitio.');
 
   SpreadsheetApp.getUi().alert(
     'Pestaña "emails" creada.\n\n' +
-      '✓ 5 columnas (timestamp, email, source, discount_code, user_registered)\n' +
+      '✓ 6 columnas (timestamp, email, source, discount_code, used_at, user_registered)\n' +
       '✓ Formato header aplicado\n\n' +
       'Ya podés recibir suscripciones desde el sitio.',
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// EXTEND EMAILS — agregar columna used_at si ya tenés la tab antigua (5 cols).
+// Segura de ejecutar varias veces: si ya existe la columna, no duplica.
+// ─────────────────────────────────────────────────────────
+function extendEmailsTab() {
+  var ss = SpreadsheetApp.getActive();
+  var tab = ss.getSheetByName('emails');
+  if (!tab) {
+    SpreadsheetApp.getUi().alert(
+      'No existe la pestaña "emails". Ejecutá primero setupEmailsTab().',
+    );
+    return;
+  }
+
+  var lastCol = tab.getLastColumn();
+  var headers = tab.getRange(1, 1, 1, lastCol).getValues()[0];
+
+  // Verificar si ya tiene used_at
+  if (headers.indexOf('used_at') !== -1) {
+    SpreadsheetApp.getUi().alert('La columna "used_at" ya existe. No hice cambios.');
+    return;
+  }
+
+  // Insertar columna E (posición 5) antes de user_registered
+  var userRegisteredIdx = headers.indexOf('user_registered');
+  var insertAt = userRegisteredIdx !== -1 ? userRegisteredIdx + 1 : lastCol + 1;
+
+  tab.insertColumnBefore(insertAt);
+  tab.getRange(1, insertAt).setValue('used_at');
+  tab.getRange(1, insertAt)
+    .setFontWeight('bold')
+    .setBackground('#1a1a1a')
+    .setFontColor('#ffffff');
+  tab.setColumnWidth(insertAt, 180);
+  tab.getRange(1, insertAt).setNote(
+    'Fecha/hora en que el código fue usado en una compra. Vacío = no usado.',
+  );
+
+  SpreadsheetApp.getUi().alert(
+    'Columna "used_at" agregada exitosamente en posición ' + insertAt + '.',
   );
 }

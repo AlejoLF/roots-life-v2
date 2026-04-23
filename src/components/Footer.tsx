@@ -49,24 +49,24 @@ export function Footer() {
           <h4 className="text-caption text-paper-100 mb-4">Ayuda</h4>
           <ul className="list-none p-0 m-0 space-y-2">
             <li>
-              <a href="#" className="text-body-sm text-paper-300 hover:text-paper-100 transition-colors">
+              <Link href="/envios" className="text-body-sm text-paper-300 hover:text-paper-100 transition-colors">
                 Envíos
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="text-body-sm text-paper-300 hover:text-paper-100 transition-colors">
+              <Link href="/cambios" className="text-body-sm text-paper-300 hover:text-paper-100 transition-colors">
                 Cambios
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="text-body-sm text-paper-300 hover:text-paper-100 transition-colors">
+              <Link href="/talles" className="text-body-sm text-paper-300 hover:text-paper-100 transition-colors">
                 Guía de talles
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="text-body-sm text-paper-300 hover:text-paper-100 transition-colors">
+              <Link href="/contacto" className="text-body-sm text-paper-300 hover:text-paper-100 transition-colors">
                 Contacto
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

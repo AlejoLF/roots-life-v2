@@ -6,6 +6,7 @@ import { hashPassword, validatePasswordStrength } from '@/lib/password';
 import { sendEmail } from '@/lib/resend';
 import { verifyEmailTemplate } from '@/lib/email-templates';
 import { subscribeEmail } from '@/lib/emails';
+import { generateDiscountCode } from '@/lib/discount';
 
 const SignupSchema = z.object({
   name: z.string().min(1, 'Nombre requerido').max(100),
@@ -70,6 +71,7 @@ export async function POST(req: NextRequest) {
 
   const hashedPassword = await hashPassword(password);
   const nowIso = new Date().toISOString();
+  const welcomeCode = acceptNewsletter ? generateDiscountCode() : null;
   let userId: string;
 
   if (existing) {
@@ -81,6 +83,7 @@ export async function POST(req: NextRequest) {
         name,
         terms_accepted_at: nowIso,
         newsletter_opt_in: acceptNewsletter,
+        welcome_code: welcomeCode,
       })
       .eq('id', userId);
   } else {
@@ -92,6 +95,7 @@ export async function POST(req: NextRequest) {
         name,
         terms_accepted_at: nowIso,
         newsletter_opt_in: acceptNewsletter,
+        welcome_code: welcomeCode,
       })
       .select('id')
       .single();
@@ -125,16 +129,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Guardar en Sheet emails si opt-in (source=signup → genera discount code)
-  let discountCode: string | undefined;
-  if (acceptNewsletter) {
-    const sub = await subscribeEmail(email, 'signup', true).catch((err) => {
-      console.error('[signup] subscribeEmail failed (non-fatal):', err);
-      return null;
-    });
-    if (sub?.ok && 'discountCode' in sub && sub.discountCode) {
-      discountCode = sub.discountCode;
-    }
+  // Guardar en Sheet emails con el mismo código de bienvenida que guardamos en users.
+  const discountCode: string | undefined = welcomeCode ?? undefined;
+  if (acceptNewsletter && welcomeCode) {
+    await subscribeEmail(email, 'signup', true, welcomeCode).catch((err) =>
+      console.error('[signup] subscribeEmail failed (non-fatal):', err),
+    );
   }
 
   // Enviar email de verificación (con código de descuento si opt-in)

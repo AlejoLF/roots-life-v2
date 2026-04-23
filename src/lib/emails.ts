@@ -1,14 +1,14 @@
 import { getSheetRows, appendSheetRow } from './sheets';
+import { generateDiscountCode } from './discount';
 
-export const DISCOUNT_CODE = 'ROOTS10';
-const EMAILS_RANGE_READ = 'emails!A2:B';
+const EMAILS_RANGE_READ = 'emails!A2:F';
 const EMAILS_RANGE_APPEND = 'emails!A1';
 
 export type SubscribeSource = 'newsletter' | 'checkout' | 'signup';
 
 export type SubscribeResult =
   | { ok: true; status: 'created'; discountCode: string }
-  | { ok: true; status: 'already_subscribed' }
+  | { ok: true; status: 'already_subscribed'; discountCode: string }
   | { ok: false; error: string };
 
 function normalizeEmail(email: string): string {
@@ -19,23 +19,34 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export async function isEmailSubscribed(email: string): Promise<boolean> {
+/**
+ * Devuelve el registro (row) del email si existe, o null.
+ * Row shape: [timestamp, email, source, discount_code, used_at, user_registered]
+ */
+export async function getEmailRecord(
+  email: string,
+): Promise<string[] | null> {
   const sheetId = process.env.PRODUCTS_SHEET_ID;
-  if (!sheetId) return false;
+  if (!sheetId) return null;
   try {
     const rows = await getSheetRows(sheetId, EMAILS_RANGE_READ);
     const normalized = normalizeEmail(email);
-    return rows.some((row) => normalizeEmail(row[1] ?? '') === normalized);
+    return rows.find((row) => normalizeEmail(row[1] ?? '') === normalized) ?? null;
   } catch (err) {
-    console.error('[emails] isEmailSubscribed failed:', err);
-    return false;
+    console.error('[emails] getEmailRecord failed:', err);
+    return null;
   }
+}
+
+export async function isEmailSubscribed(email: string): Promise<boolean> {
+  return (await getEmailRecord(email)) !== null;
 }
 
 export async function subscribeEmail(
   rawEmail: string,
   source: SubscribeSource = 'newsletter',
   userRegistered = false,
+  overrideCode?: string,
 ): Promise<SubscribeResult> {
   const email = normalizeEmail(rawEmail);
 
@@ -49,19 +60,28 @@ export async function subscribeEmail(
   }
 
   try {
-    const existing = await isEmailSubscribed(email);
+    const existing = await getEmailRecord(email);
     if (existing) {
-      return { ok: true, status: 'already_subscribed' };
+      // Devolvemos el código ya asignado (col D = índice 3)
+      const existingCode = (existing[3] ?? '').trim();
+      return {
+        ok: true,
+        status: 'already_subscribed',
+        discountCode: existingCode,
+      };
     }
 
     const givesDiscount = source === 'newsletter' || source === 'signup';
-    const discountCode = givesDiscount ? DISCOUNT_CODE : '';
+    const discountCode = givesDiscount
+      ? (overrideCode ?? generateDiscountCode())
+      : '';
 
     await appendSheetRow(sheetId, EMAILS_RANGE_APPEND, [
       new Date().toISOString(),
       email,
       source,
       discountCode,
+      '', // used_at vacío por defecto
       userRegistered ? 'TRUE' : 'FALSE',
     ]);
 
