@@ -3,19 +3,20 @@ import type { Metadata } from 'next';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ProductDetail } from '@/components/ProductDetail';
-import { products, getProduct, getRelated } from '@/data/products';
+import { getProducts, getProductBySlug, getRelatedProducts } from '@/lib/products';
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
+  const products = await getProducts();
   return products.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return { title: 'Producto no encontrado' };
   return {
     title: `${product.title} · ${product.capsuleName}`,
@@ -25,10 +26,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const relatedDetails = getRelated(slug, 4);
+  const relatedDetails = await getRelatedProducts(slug, 4);
   const related = relatedDetails.map((p) => ({
     slug: p.slug,
     image: p.images[0].src,
