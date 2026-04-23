@@ -9,14 +9,26 @@ import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
  * Así nunca cobramos real con código de test ni al revés.
  */
 
+/**
+ * Determina si usamos credenciales TEST o PROD.
+ * Override: MP_USE_TEST=1 fuerza TEST incluso en producción (útil durante QA).
+ * Para ir a ventas reales: remover MP_USE_TEST en Vercel.
+ */
+export function useTestMode(): boolean {
+  if (process.env.MP_USE_TEST === '1' || process.env.MP_USE_TEST === 'true') {
+    return true;
+  }
+  return process.env.VERCEL_ENV !== 'production';
+}
+
 function getAccessToken(): string {
-  const isProd = process.env.VERCEL_ENV === 'production';
-  const token = isProd
-    ? process.env.MP_ACCESS_TOKEN_PROD
-    : process.env.MP_ACCESS_TOKEN_TEST;
+  const test = useTestMode();
+  const token = test
+    ? process.env.MP_ACCESS_TOKEN_TEST
+    : process.env.MP_ACCESS_TOKEN_PROD;
   if (!token) {
     throw new Error(
-      `Missing MercadoPago access token (${isProd ? 'PROD' : 'TEST'})`,
+      `Missing MercadoPago access token (${test ? 'TEST' : 'PROD'})`,
     );
   }
   return token;
@@ -115,5 +127,5 @@ export async function getPayment(paymentId: string) {
 }
 
 export function isProduction(): boolean {
-  return process.env.VERCEL_ENV === 'production';
+  return !useTestMode();
 }
