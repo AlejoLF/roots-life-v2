@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { UserMenu } from './UserMenu';
 
 /**
  * Header.
@@ -124,6 +125,8 @@ export function Header() {
                 <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
               </svg>
             </a>
+
+            <UserMenu invertColors={isHome} />
 
             <Link
               href="/carrito"
