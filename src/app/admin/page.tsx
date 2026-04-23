@@ -7,11 +7,17 @@ type RevalidateResult =
   | { ok: true; revalidated: string[]; timestamp: string }
   | { ok: false; error: string };
 
+type DiagResult =
+  | { ok: true; [key: string]: unknown }
+  | { ok: false; error: string };
+
 export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [diagLoading, setDiagLoading] = useState(false);
   const [result, setResult] = useState<RevalidateResult | null>(null);
+  const [diag, setDiag] = useState<DiagResult | null>(null);
   const [lastRun, setLastRun] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,6 +29,25 @@ export default function AdminPage() {
     const last = localStorage.getItem('roots-admin-lastrun');
     if (last) setLastRun(last);
   }, []);
+
+  async function handleDiag() {
+    setDiagLoading(true);
+    setDiag(null);
+    try {
+      const res = await fetch('/api/diag', {
+        headers: { Authorization: `Bearer ${password}` },
+      });
+      const data = await res.json();
+      setDiag(data);
+    } catch (err) {
+      setDiag({
+        ok: false,
+        error: err instanceof Error ? err.message : 'Network error',
+      });
+    } finally {
+      setDiagLoading(false);
+    }
+  }
 
   async function handleRevalidate() {
     setLoading(true);
@@ -171,6 +196,34 @@ export default function AdminPage() {
                     <p className="text-white/90 text-sm">{result.error}</p>
                   </>
                 )}
+              </div>
+            )}
+
+            {/* Diagnóstico card */}
+            <div className="bg-ink-700 border border-ink-500 rounded-[2px] p-6">
+              <p className="text-caption text-rust-200 mb-2">Sheet status</p>
+              <h2 className="font-display font-bold uppercase text-paper-100 text-xl mb-3">
+                Diagnóstico
+              </h2>
+              <p className="text-white/80 text-sm leading-relaxed mb-5">
+                Verifica que las env vars estén configuradas y que el servidor
+                pueda leer la Google Sheet. Usalo cuando algo no actualice.
+              </p>
+              <Button
+                variant="ghost-inverse"
+                size="md"
+                onClick={handleDiag}
+                aria-label="Ejecutar diagnóstico"
+              >
+                {diagLoading ? 'Testeando...' : 'Testear conexión Sheet →'}
+              </Button>
+            </div>
+
+            {diag && (
+              <div className="border border-ink-500 rounded-[2px] p-5 bg-ink-700 font-mono text-[11px] text-white/90 leading-relaxed overflow-auto max-h-[500px]">
+                <pre className="whitespace-pre-wrap">
+                  {JSON.stringify(diag, null, 2)}
+                </pre>
               </div>
             )}
 
