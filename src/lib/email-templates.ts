@@ -103,6 +103,143 @@ Este link expira en 24 horas. Si no fuiste vos, ignorá este email.
   };
 }
 
+type OrderItemForEmail = {
+  title: string;
+  quantity: number;
+  price: number;
+  size?: string;
+  color?: string;
+  image?: string;
+};
+
+function money(n: number): string {
+  return '$' + n.toLocaleString('es-AR');
+}
+
+export function orderConfirmationTemplate(opts: {
+  name?: string;
+  orderId: string;
+  trackingToken: string;
+  items: OrderItemForEmail[];
+  subtotal: number;
+  shippingCost: number;
+  discount: number;
+  discountCode?: string;
+  total: number;
+  shippingAddress?: {
+    firstName?: string;
+    lastName?: string;
+    street?: string;
+    streetNumber?: string;
+    apartment?: string;
+    city?: string;
+    province?: string;
+    zip?: string;
+  };
+}): { html: string; text: string; subject: string } {
+  const name = opts.name?.trim() || '';
+  const greeting = name ? `¡Gracias ${name}!` : '¡Gracias por tu compra!';
+  const trackingUrl = `${SITE_URL}/seguir/${opts.trackingToken}`;
+
+  const itemsRows = opts.items
+    .map(
+      (item) => `
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #EFEAE0;">
+<p style="margin:0;font-size:14px;color:#0E0E0E;font-weight:500;">${item.title}</p>
+${item.size || item.color ? `<p style="margin:2px 0 0 0;font-size:11px;color:#7A6F5E;">${[item.color, item.size].filter(Boolean).join(' · ')}</p>` : ''}
+<p style="margin:2px 0 0 0;font-size:11px;color:#7A6F5E;">Cantidad: ${item.quantity}</p>
+</td>
+<td style="padding:12px 0;border-bottom:1px solid #EFEAE0;text-align:right;vertical-align:top;">
+<p style="margin:0;font-size:14px;color:#0E0E0E;font-weight:500;">${money(item.price * item.quantity)}</p>
+</td>
+</tr>`,
+    )
+    .join('');
+
+  const addressBlock = opts.shippingAddress
+    ? `
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;background:#F7F3EA;border-radius:4px;">
+<tr><td style="padding:20px;">
+<p style="margin:0 0 8px 0;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#7A6F5E;font-weight:600;">Enviamos a</p>
+<p style="margin:0;font-size:14px;color:#0E0E0E;line-height:1.5;">
+${[opts.shippingAddress.firstName, opts.shippingAddress.lastName].filter(Boolean).join(' ')}<br>
+${opts.shippingAddress.street ?? ''} ${opts.shippingAddress.streetNumber ?? ''}${opts.shippingAddress.apartment ? `, ${opts.shippingAddress.apartment}` : ''}<br>
+${opts.shippingAddress.city ?? ''}${opts.shippingAddress.province ? `, ${opts.shippingAddress.province}` : ''} ${opts.shippingAddress.zip ? `(${opts.shippingAddress.zip})` : ''}
+</p>
+</td></tr>
+</table>`
+    : '';
+
+  const discountRow =
+    opts.discount > 0
+      ? `
+<tr>
+<td style="padding:6px 0;font-size:13px;color:#C2623D;">Descuento${opts.discountCode ? ` (${opts.discountCode})` : ''}</td>
+<td style="padding:6px 0;font-size:13px;color:#C2623D;text-align:right;">−${money(opts.discount)}</td>
+</tr>`
+      : '';
+
+  const bodyHtml = `
+<h2 style="margin:0 0 12px 0;font-size:26px;font-weight:700;color:#0E0E0E;line-height:1.15;">${greeting}</h2>
+<p style="margin:0 0 20px 0;font-size:15px;color:#4D443A;">
+Tu pedido <strong>#${opts.orderId.slice(0, 8)}</strong> está confirmado. Te avisamos por email cuando esté despachado con el código de seguimiento.
+</p>
+
+<table cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;">
+<tr><td>
+<a href="${trackingUrl}" style="display:inline-block;background:#C2623D;color:#F7F3EA;text-decoration:none;padding:14px 28px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border-radius:2px;">
+Seguir mi pedido →
+</a>
+</td></tr>
+</table>
+
+<h3 style="margin:32px 0 12px 0;font-size:14px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#7A6F5E;">Resumen</h3>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+${itemsRows}
+<tr>
+<td colspan="2" style="padding-top:16px;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="padding:4px 0;font-size:13px;color:#7A6F5E;">Subtotal</td>
+<td style="padding:4px 0;font-size:13px;color:#0E0E0E;text-align:right;">${money(opts.subtotal)}</td>
+</tr>
+<tr>
+<td style="padding:4px 0;font-size:13px;color:#7A6F5E;">Envío</td>
+<td style="padding:4px 0;font-size:13px;color:#0E0E0E;text-align:right;">${opts.shippingCost === 0 ? 'Gratis' : money(opts.shippingCost)}</td>
+</tr>
+${discountRow}
+<tr>
+<td style="padding:10px 0 0 0;font-size:15px;color:#0E0E0E;font-weight:600;border-top:1px solid #EFEAE0;">Total</td>
+<td style="padding:10px 0 0 0;font-size:17px;color:#0E0E0E;font-weight:700;text-align:right;border-top:1px solid #EFEAE0;">${money(opts.total)}</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+
+${addressBlock}
+
+<h3 style="margin:32px 0 12px 0;font-size:14px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#7A6F5E;">Qué sigue</h3>
+<p style="margin:0 0 10px 0;font-size:14px;color:#4D443A;line-height:1.55;">
+Preparamos tu pedido en el taller (1-3 días hábiles). Cuando lo despachemos recibís otro email con el código de seguimiento de Mercado Envíos para seguirlo hasta tu casa.
+</p>
+<p style="margin:16px 0 0 0;font-size:13px;color:#7A6F5E;">
+¿Alguna duda? Escribinos a <a href="mailto:emma.irusta@hotmail.com" style="color:#C2623D;">emma.irusta@hotmail.com</a>.
+</p>`;
+
+  const text = `${greeting}\n\nTu pedido #${opts.orderId.slice(0, 8)} está confirmado.\n\nSeguilo en: ${trackingUrl}\n\nResumen:\n${opts.items.map((i) => `  ${i.quantity}x ${i.title} - ${money(i.price * i.quantity)}`).join('\n')}\n\nSubtotal: ${money(opts.subtotal)}\nEnvío: ${opts.shippingCost === 0 ? 'Gratis' : money(opts.shippingCost)}${opts.discount > 0 ? `\nDescuento: -${money(opts.discount)}` : ''}\nTotal: ${money(opts.total)}\n\nGracias por elegir ROOTS LIFE.`;
+
+  return {
+    subject: `✓ Pedido confirmado #${opts.orderId.slice(0, 8)} · ROOTS LIFE`,
+    html: baseTemplate({
+      preheader: `Tu pedido está confirmado. Total: ${money(opts.total)}.`,
+      bodyHtml,
+    }),
+    text,
+  };
+}
+
 export function passwordResetTemplate(opts: {
   name?: string;
   resetUrl: string;

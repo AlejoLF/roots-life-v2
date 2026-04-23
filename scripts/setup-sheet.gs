@@ -419,6 +419,171 @@ function setupEmailsTab() {
 }
 
 // ─────────────────────────────────────────────────────────
+// ORDERS — pestaña para pedidos confirmados (pagados).
+// Ejecutar UNA sola vez. Se rellena automáticamente cuando un pago se confirma.
+// Conditional formatting por status: pending amarillo, paid verde, shipped azul, delivered gris, cancelled rojo.
+// ─────────────────────────────────────────────────────────
+function setupOrdersTab() {
+  var ss = SpreadsheetApp.getActive();
+  var tab = ss.getSheetByName('orders');
+  if (tab) {
+    SpreadsheetApp.getUi().alert('La pestaña "orders" ya existe.');
+    return;
+  }
+
+  tab = ss.insertSheet('orders');
+
+  var headers = [
+    'fecha',          // A
+    'order_id',       // B
+    'status',         // C
+    'cliente',        // D
+    'email',          // E
+    'telefono',       // F
+    'direccion',      // G
+    'items',          // H
+    'subtotal',       // I
+    'envio',          // J
+    'descuento',      // K
+    'codigo_desc',    // L
+    'total',          // M
+    'mp_payment_id',  // N
+    'tracking',       // O
+    'notas_cliente',  // P
+    'link_tracking',  // Q
+    'notas_internas', // R
+  ];
+  tab.getRange(1, 1, 1, headers.length).setValues([headers]);
+
+  // Header style
+  tab.getRange(1, 1, 1, headers.length)
+    .setFontWeight('bold')
+    .setBackground('#1a1a1a')
+    .setFontColor('#ffffff')
+    .setHorizontalAlignment('center');
+  tab.setFrozenRows(1);
+  tab.setFrozenColumns(3);
+
+  // Column widths
+  tab.setColumnWidth(1, 150);  // fecha
+  tab.setColumnWidth(2, 100);  // order_id (short hash visible)
+  tab.setColumnWidth(3, 110);  // status
+  tab.setColumnWidth(4, 180);  // cliente
+  tab.setColumnWidth(5, 220);  // email
+  tab.setColumnWidth(6, 140);  // telefono
+  tab.setColumnWidth(7, 320);  // direccion
+  tab.setColumnWidth(8, 320);  // items
+  tab.setColumnWidth(9, 100);  // subtotal
+  tab.setColumnWidth(10, 90);  // envio
+  tab.setColumnWidth(11, 100); // descuento
+  tab.setColumnWidth(12, 140); // codigo_desc
+  tab.setColumnWidth(13, 100); // total
+  tab.setColumnWidth(14, 160); // mp_payment_id
+  tab.setColumnWidth(15, 140); // tracking
+  tab.setColumnWidth(16, 260); // notas_cliente
+  tab.setColumnWidth(17, 120); // link_tracking
+  tab.setColumnWidth(18, 280); // notas_internas
+
+  // Wrap en dirección, items, notas
+  ['G', 'H', 'P', 'R'].forEach(function (col) {
+    tab.getRange(col + '2:' + col + '1000').setWrap(true);
+  });
+
+  // Alineación centrada en numéricos
+  ['I', 'J', 'K', 'M'].forEach(function (col) {
+    tab.getRange(col + '2:' + col + '1000').setHorizontalAlignment('right');
+  });
+  tab.getRange('C2:C1000').setHorizontalAlignment('center');
+
+  // Dropdown en status para que el cliente cambie manualmente "paid → preparing → shipped → delivered"
+  var statusRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(
+      ['pending', 'paid', 'preparing', 'shipped', 'in_transit', 'delivered', 'cancelled', 'refunded'],
+      true,
+    )
+    .setAllowInvalid(false)
+    .build();
+  tab.getRange('C2:C1000').setDataValidation(statusRule);
+
+  // Conditional formatting por status
+  var statusRange = tab.getRange('C2:C1000');
+  var rules = [
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('pending')
+      .setBackground('#FFF3CD')
+      .setFontColor('#7A5C00')
+      .setRanges([statusRange])
+      .build(),
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('paid')
+      .setBackground('#C3E6CB')
+      .setFontColor('#155724')
+      .setBold(true)
+      .setRanges([statusRange])
+      .build(),
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('preparing')
+      .setBackground('#FFE0B2')
+      .setFontColor('#663C00')
+      .setRanges([statusRange])
+      .build(),
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('shipped')
+      .setBackground('#BBDEFB')
+      .setFontColor('#0D47A1')
+      .setRanges([statusRange])
+      .build(),
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('in_transit')
+      .setBackground('#90CAF9')
+      .setFontColor('#0D47A1')
+      .setRanges([statusRange])
+      .build(),
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('delivered')
+      .setBackground('#E0E0E0')
+      .setFontColor('#424242')
+      .setRanges([statusRange])
+      .build(),
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('cancelled')
+      .setBackground('#FFCDD2')
+      .setFontColor('#B71C1C')
+      .setRanges([statusRange])
+      .build(),
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('refunded')
+      .setBackground('#F8BBD0')
+      .setFontColor('#880E4F')
+      .setRanges([statusRange])
+      .build(),
+  ];
+  tab.setConditionalFormatRules(rules);
+
+  // Notas en headers
+  tab.getRange('C1').setNote(
+    'Estado del pedido. Cambialo manualmente al ir procesando: paid → preparing → shipped → delivered. Se colorea automáticamente.',
+  );
+  tab.getRange('O1').setNote(
+    'Código de seguimiento de Mercado Envíos o correo. Cuando lo cargues acá, el comprador lo ve en su perfil.',
+  );
+  tab.getRange('Q1').setNote(
+    'Link del tracking público (para compartir con el comprador).',
+  );
+  tab.getRange('R1').setNote(
+    'Notas internas para vos (recordatorios, observaciones, etc). El comprador NO las ve.',
+  );
+
+  SpreadsheetApp.getUi().alert(
+    'Pestaña "orders" creada.\n\n' +
+      '✓ 18 columnas con validaciones y colores por estado\n' +
+      '✓ Headers congelados + primeras 3 columnas congeladas\n' +
+      '✓ Dropdown en status para cambiar fácil entre paid/preparing/shipped/delivered\n\n' +
+      'Se rellena sola cuando un pago se confirma. Vos solo editás status y tracking.',
+  );
+}
+
+// ─────────────────────────────────────────────────────────
 // EXTEND EMAILS — agregar columna used_at si ya tenés la tab antigua (5 cols).
 // Segura de ejecutar varias veces: si ya existe la columna, no duplica.
 // ─────────────────────────────────────────────────────────

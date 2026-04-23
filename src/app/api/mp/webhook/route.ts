@@ -3,6 +3,9 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { getPayment } from '@/lib/mercadopago';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { markDiscountCodeUsed, validateDiscountCode } from '@/lib/discount';
+import { sendEmail } from '@/lib/resend';
+import { orderConfirmationTemplate } from '@/lib/email-templates';
+import { appendOrderToSheet } from '@/lib/orders-sheet';
 
 /**
  * Webhook de MercadoPago — recibe notificaciones de payment y merchant_order.
@@ -118,7 +121,9 @@ async function handlePayment(paymentId: string) {
   const supabase = getSupabaseAdmin();
   const { data: order } = await supabase
     .from('orders')
-    .select('id, status, discount_code, total')
+    .select(
+      'id, status, discount_code, discount, total, subtotal, shipping_cost, items, shipping_address, guest_email, guest_name, user_id, tracking_token, created_at',
+    )
     .eq('id', externalRef)
     .maybeSingle();
 
@@ -137,14 +142,17 @@ async function handlePayment(paymentId: string) {
     mp_payment_id: paymentId,
   };
 
+  // Detectamos la transición "por primera vez a paid" para disparar side effects
+  // (email + append sheet) sólo una vez.
+  const isTransitionToPaid = isApproved && order.status === 'pending';
+
   if (isApproved) {
-    // Transición pending → paid (sólo si no ya estaba aprobada)
     if (order.status === 'pending') {
       updates.status = 'paid';
       updates.paid_at = nowIso;
     }
   } else if (isPending) {
-    // No cambia status principal; queda pending hasta approved
+    // Sin cambios
   } else if (isRejected) {
     if (order.status === 'pending') {
       updates.status = 'cancelled';
@@ -154,16 +162,74 @@ async function handlePayment(paymentId: string) {
 
   await supabase.from('orders').update(updates).eq('id', order.id);
 
-  // Si quedó approved y había un código de descuento, marcarlo como usado
-  if (isApproved && order.status === 'pending' && order.discount_code) {
-    const validated = await validateDiscountCode(order.discount_code);
-    if (validated.ok) {
-      await markDiscountCodeUsed(validated);
+  if (!isTransitionToPaid) return;
+
+  // ─── Side effects que sólo corren una vez en la transición a paid ───
+
+  // 1) Marcar código de descuento como usado
+  if (order.discount_code) {
+    try {
+      const validated = await validateDiscountCode(order.discount_code);
+      if (validated.ok) await markDiscountCodeUsed(validated);
+    } catch (err) {
+      console.error('[mp-webhook] marcar código falló:', err);
     }
   }
 
-  // TODO Fase 4b: enviar email de confirmación si isApproved
-  // TODO Fase 4b: append row a Sheet orders para el cliente
+  // 2) Append a Sheet de órdenes para el cliente
+  try {
+    await appendOrderToSheet({
+      id: order.id,
+      tracking_token: order.tracking_token,
+      status: 'paid',
+      items: order.items,
+      subtotal: order.subtotal,
+      shipping_cost: order.shipping_cost,
+      discount: order.discount,
+      discount_code: order.discount_code,
+      total: order.total,
+      mp_payment_id: paymentId,
+      shipping_address: order.shipping_address,
+      created_at: order.created_at,
+    });
+  } catch (err) {
+    console.error('[mp-webhook] append Sheet falló:', err);
+  }
+
+  // 3) Email de confirmación al comprador
+  try {
+    const buyerEmail = order.guest_email
+      ?? (order.shipping_address as { email?: string } | null)?.email
+      ?? null;
+    const buyerName =
+      order.guest_name
+      ?? (order.shipping_address as { firstName?: string; lastName?: string } | null)
+        ?.firstName
+      ?? '';
+
+    if (buyerEmail) {
+      const tpl = orderConfirmationTemplate({
+        name: buyerName,
+        orderId: order.id,
+        trackingToken: order.tracking_token,
+        items: order.items,
+        subtotal: order.subtotal,
+        shippingCost: order.shipping_cost,
+        discount: order.discount,
+        discountCode: order.discount_code ?? undefined,
+        total: order.total,
+        shippingAddress: order.shipping_address ?? undefined,
+      });
+      await sendEmail({
+        to: buyerEmail,
+        subject: tpl.subject,
+        html: tpl.html,
+        text: tpl.text,
+      });
+    }
+  } catch (err) {
+    console.error('[mp-webhook] email de confirmación falló:', err);
+  }
 }
 
 // MP a veces pega con GET para confirmar que el endpoint existe
