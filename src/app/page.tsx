@@ -8,9 +8,11 @@ import { SerigrafiaCTA } from '@/components/SerigrafiaCTA';
 import { InstagramFeed } from '@/components/InstagramFeed';
 import { ProductCard } from '@/components/ProductCard';
 import Link from 'next/link';
-import { featuredProducts } from '@/data/catalog';
+import { getFeaturedProducts, productToCardProps } from '@/lib/products';
 
-export default function Home() {
+export default async function Home() {
+  const featured = await getFeaturedProducts(4);
+  const featuredCards = featured.map(productToCardProps);
   return (
     <>
       <Header />
@@ -37,7 +39,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-              {featuredProducts.map((p) => (
+              {featuredCards.map((p) => (
                 <ProductCard key={p.href} {...p} />
               ))}
             </div>
