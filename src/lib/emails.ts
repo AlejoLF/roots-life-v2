@@ -54,18 +54,21 @@ export async function subscribeEmail(
       return { ok: true, status: 'already_subscribed' };
     }
 
+    const givesDiscount = source === 'newsletter' || source === 'signup';
+    const discountCode = givesDiscount ? DISCOUNT_CODE : '';
+
     await appendSheetRow(sheetId, EMAILS_RANGE_APPEND, [
       new Date().toISOString(),
       email,
       source,
-      source === 'newsletter' ? DISCOUNT_CODE : '',
+      discountCode,
       userRegistered ? 'TRUE' : 'FALSE',
     ]);
 
     return {
       ok: true,
       status: 'created',
-      discountCode: source === 'newsletter' ? DISCOUNT_CODE : '',
+      discountCode,
     };
   } catch (err) {
     console.error('[emails] subscribeEmail failed:', err);

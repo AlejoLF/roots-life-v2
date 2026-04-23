@@ -125,19 +125,28 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Guardar en Sheet emails si opt-in (newsletter source)
+  // Guardar en Sheet emails si opt-in (source=signup → genera discount code)
+  let discountCode: string | undefined;
   if (acceptNewsletter) {
-    await subscribeEmail(email, 'signup', true).catch((err) =>
-      console.error('[signup] subscribeEmail failed (non-fatal):', err),
-    );
+    const sub = await subscribeEmail(email, 'signup', true).catch((err) => {
+      console.error('[signup] subscribeEmail failed (non-fatal):', err);
+      return null;
+    });
+    if (sub?.ok && 'discountCode' in sub && sub.discountCode) {
+      discountCode = sub.discountCode;
+    }
   }
 
-  // Enviar email de verificación
+  // Enviar email de verificación (con código de descuento si opt-in)
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.rootslife.shop';
   const verifyUrl = `${baseUrl}/verificar?token=${token}`;
 
-  const { subject, html, text } = verifyEmailTemplate({ name, verifyUrl });
+  const { subject, html, text } = verifyEmailTemplate({
+    name,
+    verifyUrl,
+    discountCode,
+  });
   const emailResult = await sendEmail({ to: email, subject, html, text });
 
   if (!emailResult.ok) {

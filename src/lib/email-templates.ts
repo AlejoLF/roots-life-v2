@@ -40,14 +40,32 @@ ROOTS LIFE · Comodoro Rivadavia · Patagonia
 export function verifyEmailTemplate(opts: {
   name?: string;
   verifyUrl: string;
+  discountCode?: string;
 }): { html: string; text: string; subject: string } {
   const name = opts.name?.trim() || '';
   const greeting = name ? `¡Hola ${name}!` : '¡Hola!';
+  const hasDiscount = Boolean(opts.discountCode);
+
+  const discountBlock = hasDiscount
+    ? `
+<table cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;background:#0E0E0E;border-radius:4px;">
+<tr><td style="padding:24px;text-align:center;">
+<p style="margin:0 0 8px 0;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#F2BCA5;font-weight:600;">Regalo de bienvenida</p>
+<p style="margin:0 0 14px 0;font-size:22px;font-weight:700;color:#F7F3EA;line-height:1.2;text-transform:uppercase;">10% OFF en tu primera compra</p>
+<div style="display:inline-block;border:1.5px dashed #F2BCA5;padding:10px 20px;border-radius:2px;">
+<p style="margin:0;font-size:22px;font-weight:700;color:#F2BCA5;letter-spacing:4px;">${opts.discountCode}</p>
+</div>
+<p style="margin:14px 0 0 0;font-size:12px;color:rgba(247,243,234,0.75);">
+Usalo al finalizar tu primera compra.
+</p>
+</td></tr>
+</table>`
+    : '';
 
   const bodyHtml = `
 <h2 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#0E0E0E;line-height:1.2;">${greeting}</h2>
 <p style="margin:0 0 20px 0;font-size:15px;color:#4D443A;">
-Gracias por registrarte en ROOTS LIFE. Para activar tu cuenta y empezar a comprar, confirmá tu email tocando el botón de abajo.
+Gracias por registrarte en ROOTS LIFE. Para activar tu cuenta${hasDiscount ? ' y usar tu código de descuento' : ''}, confirmá tu email tocando el botón de abajo.
 </p>
 <table cellpadding="0" cellspacing="0" border="0" style="margin:28px 0;">
 <tr><td>
@@ -56,6 +74,7 @@ Confirmar mi email →
 </a>
 </td></tr>
 </table>
+${discountBlock}
 <p style="margin:0 0 12px 0;font-size:13px;color:#7A6F5E;">
 O copiá este link y pegalo en tu navegador:
 </p>
@@ -66,12 +85,18 @@ O copiá este link y pegalo en tu navegador:
 Este link expira en 24 horas. Si no fuiste vos, ignorá este email.
 </p>`;
 
-  const text = `${greeting}\n\nGracias por registrarte en ROOTS LIFE.\nConfirmá tu email con este link:\n\n${opts.verifyUrl}\n\nEl link expira en 24 hs. Si no fuiste vos, ignorá este email.`;
+  const text = hasDiscount
+    ? `${greeting}\n\nGracias por registrarte en ROOTS LIFE.\nTu código de bienvenida: ${opts.discountCode} (10% OFF en tu primera compra)\n\nConfirmá tu email con este link:\n${opts.verifyUrl}\n\nEl link expira en 24 hs. Si no fuiste vos, ignorá este email.`
+    : `${greeting}\n\nGracias por registrarte en ROOTS LIFE.\nConfirmá tu email con este link:\n\n${opts.verifyUrl}\n\nEl link expira en 24 hs. Si no fuiste vos, ignorá este email.`;
 
   return {
-    subject: 'Confirmá tu email · ROOTS LIFE',
+    subject: hasDiscount
+      ? '¡Bienvenido! Tu 10% OFF + confirmá tu email'
+      : 'Confirmá tu email · ROOTS LIFE',
     html: baseTemplate({
-      preheader: 'Confirmá tu email para activar tu cuenta en ROOTS LIFE.',
+      preheader: hasDiscount
+        ? 'Tu código ROOTS10 adentro. Confirmá tu email para activar todo.'
+        : 'Confirmá tu email para activar tu cuenta en ROOTS LIFE.',
       bodyHtml,
     }),
     text,
