@@ -148,7 +148,7 @@ export default function SerigrafiaPage() {
               Escribinos por WhatsApp y pasamos presupuesto en menos de 24 hs.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Button href="https://wa.me/5492974000000" variant="accent" size="lg">
+              <Button href="https://wa.me/5492974737664" variant="accent" size="lg">
                 Escribir por WhatsApp →
               </Button>
               <Button href="https://instagram.com/rootslife.cr" variant="outline" size="lg">

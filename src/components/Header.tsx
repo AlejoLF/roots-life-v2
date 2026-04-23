@@ -261,7 +261,7 @@ function MobileDrawer({
               <span>@rootslife.cr</span>
             </a>
             <a
-              href="https://wa.me/5492974000000"
+              href="https://wa.me/5492974737664"
               target="_blank"
               rel="noopener"
               className="inline-flex items-center gap-3 text-white/90 text-sm hover:text-paper-100"

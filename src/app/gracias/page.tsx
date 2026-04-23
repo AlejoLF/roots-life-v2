@@ -168,7 +168,7 @@ export default function GraciasPage() {
             <Button href="/catalogo" variant="dark" size="lg">
               Seguir comprando →
             </Button>
-            <Button href="https://wa.me/5492974000000" variant="outline" size="lg">
+            <Button href="https://wa.me/5492974737664" variant="outline" size="lg">
               Escribir por WhatsApp
             </Button>
           </div>
