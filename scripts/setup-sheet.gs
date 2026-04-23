@@ -367,3 +367,50 @@ function removeDefaultSheet_(ss) {
     if (s) ss.deleteSheet(s);
   });
 }
+
+// ─────────────────────────────────────────────────────────
+// EMAILS — setup independiente. Ejecutar UNA sola vez.
+// No toca capsulas ni productos.
+// ─────────────────────────────────────────────────────────
+function setupEmailsTab() {
+  var ss = SpreadsheetApp.getActive();
+  var tab = ss.getSheetByName('emails');
+  if (tab) {
+    SpreadsheetApp.getUi().alert(
+      'La pestaña "emails" ya existe. No hice cambios.',
+    );
+    return;
+  }
+
+  tab = ss.insertSheet('emails');
+
+  var headers = ['timestamp', 'email', 'source', 'discount_code', 'user_registered'];
+  tab.getRange(1, 1, 1, headers.length).setValues([headers]);
+
+  // Header style
+  tab.getRange(1, 1, 1, headers.length)
+    .setFontWeight('bold')
+    .setBackground('#1a1a1a')
+    .setFontColor('#ffffff');
+  tab.setFrozenRows(1);
+
+  // Widths
+  tab.setColumnWidth(1, 180); // timestamp
+  tab.setColumnWidth(2, 280); // email
+  tab.setColumnWidth(3, 140); // source
+  tab.setColumnWidth(4, 140); // discount_code
+  tab.setColumnWidth(5, 120); // user_registered
+
+  // Notas
+  tab.getRange('A1').setNote('Fecha/hora de la suscripción (ISO 8601 UTC).');
+  tab.getRange('C1').setNote('De dónde vino el email: newsletter, checkout, signup.');
+  tab.getRange('D1').setNote('Código de descuento generado para primera compra (si aplica).');
+  tab.getRange('E1').setNote('TRUE si el email ya corresponde a un usuario registrado en el sitio.');
+
+  SpreadsheetApp.getUi().alert(
+    'Pestaña "emails" creada.\n\n' +
+      '✓ 5 columnas (timestamp, email, source, discount_code, user_registered)\n' +
+      '✓ Formato header aplicado\n\n' +
+      'Ya podés recibir suscripciones desde el sitio.',
+  );
+}
