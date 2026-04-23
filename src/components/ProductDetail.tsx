@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from './Button';
 import { ProductCard } from './ProductCard';
 import type { ProductDetail as ProductDetailType } from '@/data/products';
+import { addToCart } from '@/lib/cart';
 
 type ProductDetailProps = {
   product: ProductDetailType;
@@ -12,11 +14,36 @@ type ProductDetailProps = {
 };
 
 export function ProductDetail({ product, related }: ProductDetailProps) {
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState(product.sizes[Math.floor(product.sizes.length / 2)] ?? product.sizes[0]);
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.name ?? '');
   const [qty, setQty] = useState(1);
   const [openSection, setOpenSection] = useState<string | null>('descripcion');
+  const [added, setAdded] = useState(false);
+
+  function handleAddToCart() {
+    const id = `${product.slug}-${selectedSize || 'na'}-${selectedColor || 'na'}`;
+    addToCart(
+      {
+        id,
+        slug: product.slug,
+        title: product.title,
+        image: product.images[0]?.src ?? '',
+        price: product.priceNumber,
+        size: selectedSize || undefined,
+        color: selectedColor || undefined,
+      },
+      qty,
+    );
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2500);
+  }
+
+  function handleBuyNow() {
+    handleAddToCart();
+    router.push('/checkout');
+  }
 
   return (
     <>
@@ -118,7 +145,7 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
           <div>
             <div className="flex justify-between items-baseline text-[10px] font-medium uppercase tracking-widest text-ink-500 mb-3">
               <span>Talle</span>
-              <Link href="#" className="text-ink-900 no-underline border-b border-current">
+              <Link href="/talles" className="text-ink-900 no-underline border-b border-current">
                 Guía de talles
               </Link>
             </div>
@@ -141,27 +168,42 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
           </div>
 
           {/* Quantity + CTA */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center border-[1.5px] border-[var(--color-border)] rounded-[4px] h-12">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="inline-flex items-center border-[1.5px] border-[var(--color-border)] rounded-[4px] h-12">
+                <button
+                  type="button"
+                  onClick={() => setQty(Math.max(1, qty - 1))}
+                  className="w-11 h-full font-medium text-lg hover:bg-ink-100"
+                  aria-label="Restar"
+                >
+                  −
+                </button>
+                <span className="min-w-[2.5rem] text-center text-sm font-medium">{qty}</span>
+                <button
+                  type="button"
+                  onClick={() => setQty(qty + 1)}
+                  className="w-11 h-full font-medium text-lg hover:bg-ink-100"
+                  aria-label="Sumar"
+                >
+                  +
+                </button>
+              </div>
               <button
-                onClick={() => setQty(Math.max(1, qty - 1))}
-                className="w-11 h-full font-medium text-lg hover:bg-ink-100"
-                aria-label="Restar"
+                type="button"
+                onClick={handleAddToCart}
+                className="flex-1 min-w-[200px] bg-ink-900 text-paper-100 border-[1.5px] border-ink-900 hover:bg-ink-700 hover:border-ink-700 px-8 py-4 text-sm font-body font-semibold uppercase tracking-wider transition-all"
               >
-                −
-              </button>
-              <span className="min-w-[2.5rem] text-center text-sm font-medium">{qty}</span>
-              <button
-                onClick={() => setQty(qty + 1)}
-                className="w-11 h-full font-medium text-lg hover:bg-ink-100"
-                aria-label="Sumar"
-              >
-                +
+                {added ? '✓ Agregado al carrito' : 'Agregar al carrito →'}
               </button>
             </div>
-            <Button href="/carrito" variant="dark" size="lg" className="flex-1 min-w-[200px]">
-              Agregar al carrito →
-            </Button>
+            <button
+              type="button"
+              onClick={handleBuyNow}
+              className="w-full bg-rust-500 text-paper-100 border-[1.5px] border-rust-500 hover:bg-rust-700 hover:border-rust-700 px-8 py-4 text-sm font-body font-semibold uppercase tracking-wider transition-all"
+            >
+              Comprar ahora · Mercado Pago →
+            </button>
           </div>
 
           {/* Shipping banner */}

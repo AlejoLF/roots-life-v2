@@ -53,3 +53,19 @@ export async function appendSheetRow(
     requestBody: { values: [values] },
   });
 }
+
+export async function updateSheetCell(
+  sheetId: string,
+  range: string,
+  value: string | number,
+): Promise<void> {
+  const auth = getAuth();
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: sheetId,
+    range,
+    valueInputOption: 'USER_ENTERED',
+    requestBody: { values: [[value]] },
+  });
+}
