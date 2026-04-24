@@ -32,10 +32,20 @@ function estimateShipping(province: string, subtotal: number): ShippingEstimate 
   return { cost: 5500, label: 'Mercado Envíos · 4-7 días' };
 }
 
+type ShippingMethod = 'mercado_envios' | 'pickup';
+
+const PICKUP_ADDRESS = {
+  street: 'Av. Kennedy 2665',
+  city: 'Comodoro Rivadavia',
+  province: 'Chubut',
+  zip: '9000',
+};
+
 export function CheckoutClient({ initialData }: { initialData: InitialData }) {
   const router = useRouter();
   const { items, isReady } = useCart();
 
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>('mercado_envios');
   const [firstName, setFirstName] = useState(initialData?.firstName ?? '');
   const [lastName, setLastName] = useState(initialData?.lastName ?? '');
   const [email, setEmail] = useState(initialData?.email ?? '');
@@ -66,12 +76,17 @@ export function CheckoutClient({ initialData }: { initialData: InitialData }) {
     }
   }, [isReady, items.length, router]);
 
+  const isPickup = shippingMethod === 'pickup';
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const shipping = estimateShipping(province, subtotal);
+  const envioEstimate = estimateShipping(province, subtotal);
+  const shippingCost = isPickup ? 0 : envioEstimate.cost;
+  const shippingLabel = isPickup
+    ? 'Retiro en local · sin costo'
+    : envioEstimate.label;
   const discountAmount = discountApplied
     ? Math.round(subtotal * (discountApplied.percentage / 100))
     : 0;
-  const total = subtotal + shipping.cost - discountAmount;
+  const total = subtotal + shippingCost - discountAmount;
 
   async function handleApplyDiscount() {
     setDiscountError(null);
@@ -117,20 +132,21 @@ export function CheckoutClient({ initialData }: { initialData: InitialData }) {
             size: i.size,
             color: i.color,
           })),
+          shippingMethod,
           shipping: {
             firstName,
             lastName,
             email,
             phone,
-            street,
-            streetNumber,
-            apartment,
-            city,
-            province,
-            zip,
+            street: isPickup ? PICKUP_ADDRESS.street : street,
+            streetNumber: isPickup ? '' : streetNumber,
+            apartment: isPickup ? '' : apartment,
+            city: isPickup ? PICKUP_ADDRESS.city : city,
+            province: isPickup ? PICKUP_ADDRESS.province : province,
+            zip: isPickup ? PICKUP_ADDRESS.zip : zip,
             notes,
           },
-          shippingCost: shipping.cost,
+          shippingCost,
           discountCode: discountApplied?.code,
         }),
       });
@@ -215,78 +231,130 @@ export function CheckoutClient({ initialData }: { initialData: InitialData }) {
             </div>
           </section>
 
+          {/* Método de entrega */}
           <section className="bg-white border border-[var(--color-border)] rounded-[4px] p-5 md:p-6">
-            <h2 className="text-h3 mb-4">Dirección de envío</h2>
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-              <Input
-                label="Calle"
-                required
-                value={street}
-                onChange={setStreet}
-                autoComplete="street-address"
-                className="md:col-span-4"
+            <h2 className="text-h3 mb-4">¿Cómo querés recibir tu pedido?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <MethodRadio
+                name="method"
+                value="mercado_envios"
+                checked={shippingMethod === 'mercado_envios'}
+                onChange={() => setShippingMethod('mercado_envios')}
+                title="Envío a domicilio"
+                subtitle="Mercado Envíos · Toda Argentina"
+                cost={subtotal >= 80000 ? 'GRATIS' : 'Calculado abajo'}
               />
-              <Input
-                label="Número"
-                required
-                value={streetNumber}
-                onChange={setStreetNumber}
-                className="md:col-span-2"
-              />
-              <Input
-                label="Depto / Piso"
-                value={apartment}
-                onChange={setApartment}
-                placeholder="(opcional)"
-                className="md:col-span-2"
-              />
-              <Input
-                label="Ciudad"
-                required
-                value={city}
-                onChange={setCity}
-                autoComplete="address-level2"
-                className="md:col-span-4"
-              />
-              <Select
-                label="Provincia"
-                required
-                value={province}
-                onChange={setProvince}
-                options={PROVINCES}
-                className="md:col-span-4"
-              />
-              <Input
-                label="CP"
-                required
-                value={zip}
-                onChange={setZip}
-                autoComplete="postal-code"
-                className="md:col-span-2"
-              />
-              <Input
-                label="Instrucciones (opcional)"
-                value={notes}
-                onChange={setNotes}
-                placeholder="Timbre, horario, referencias..."
-                className="md:col-span-6"
+              <MethodRadio
+                name="method"
+                value="pickup"
+                checked={shippingMethod === 'pickup'}
+                onChange={() => setShippingMethod('pickup')}
+                title="Retiro en local"
+                subtitle="Av. Kennedy 2665, Comodoro"
+                cost="Sin costo"
               />
             </div>
           </section>
 
+          {/* Dirección de envío — solo si es Mercado Envíos */}
+          {!isPickup && (
+            <section className="bg-white border border-[var(--color-border)] rounded-[4px] p-5 md:p-6">
+              <h2 className="text-h3 mb-4">Dirección de envío</h2>
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                <Input
+                  label="Calle"
+                  required
+                  value={street}
+                  onChange={setStreet}
+                  autoComplete="street-address"
+                  className="md:col-span-4"
+                />
+                <Input
+                  label="Número"
+                  required
+                  value={streetNumber}
+                  onChange={setStreetNumber}
+                  className="md:col-span-2"
+                />
+                <Input
+                  label="Depto / Piso"
+                  value={apartment}
+                  onChange={setApartment}
+                  placeholder="(opcional)"
+                  className="md:col-span-2"
+                />
+                <Input
+                  label="Ciudad"
+                  required
+                  value={city}
+                  onChange={setCity}
+                  autoComplete="address-level2"
+                  className="md:col-span-4"
+                />
+                <Select
+                  label="Provincia"
+                  required
+                  value={province}
+                  onChange={setProvince}
+                  options={PROVINCES}
+                  className="md:col-span-4"
+                />
+                <Input
+                  label="CP"
+                  required
+                  value={zip}
+                  onChange={setZip}
+                  autoComplete="postal-code"
+                  className="md:col-span-2"
+                />
+                <Input
+                  label="Instrucciones (opcional)"
+                  value={notes}
+                  onChange={setNotes}
+                  placeholder="Timbre, horario, referencias..."
+                  className="md:col-span-6"
+                />
+              </div>
+            </section>
+          )}
+
+          {/* Info del envío / retiro */}
           <section className="bg-white border border-[var(--color-border)] rounded-[4px] p-5 md:p-6">
-            <h2 className="text-h3 mb-4">Envío</h2>
-            <div className="flex items-center justify-between p-4 bg-paper-100 rounded-[2px]">
-              <div>
-                <p className="text-sm font-medium text-ink-900">{shipping.label}</p>
-                <p className="text-xs text-ink-500 mt-1">
-                  El código de seguimiento se envía por email al despachar.
+            <h2 className="text-h3 mb-4">{isPickup ? 'Retiro' : 'Envío'}</h2>
+            {isPickup ? (
+              <div className="p-4 bg-paper-100 rounded-[2px] space-y-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-ink-500 mb-1">
+                    Dirección del local
+                  </p>
+                  <p className="text-sm font-medium text-ink-900">
+                    Av. Kennedy 2665 · Comodoro Rivadavia · Chubut (CP 9000)
+                  </p>
+                </div>
+                <p className="text-xs text-ink-500 leading-relaxed">
+                  Te avisamos por email y WhatsApp cuando el pedido esté listo
+                  para retirar. Coordinás el horario directamente con nosotros.
+                </p>
+                <Input
+                  label="Comentarios adicionales (opcional)"
+                  value={notes}
+                  onChange={setNotes}
+                  placeholder="Horario preferido, consultas..."
+                />
+              </div>
+            ) : (
+              <div className="flex items-center justify-between p-4 bg-paper-100 rounded-[2px]">
+                <div>
+                  <p className="text-sm font-medium text-ink-900">{shippingLabel}</p>
+                  <p className="text-xs text-ink-500 mt-1">
+                    El código de seguimiento se envía por email al despachar.
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-ink-900 flex-shrink-0">
+                  {shippingCost === 0 ? 'GRATIS' : formatARS(shippingCost)}
                 </p>
               </div>
-              <p className="text-sm font-semibold text-ink-900 flex-shrink-0">
-                {shipping.cost === 0 ? 'GRATIS' : formatARS(shipping.cost)}
-              </p>
-            </div>
+            )}
           </section>
 
           <section className="bg-white border border-[var(--color-border)] rounded-[4px] p-5 md:p-6">
@@ -390,9 +458,11 @@ export function CheckoutClient({ initialData }: { initialData: InitialData }) {
                 <span>{formatARS(subtotal)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-white/75">Envío</span>
+                <span className="text-white/75">
+                  {isPickup ? 'Retiro' : 'Envío'}
+                </span>
                 <span>
-                  {shipping.cost === 0 ? 'Gratis' : formatARS(shipping.cost)}
+                  {shippingCost === 0 ? 'Gratis' : formatARS(shippingCost)}
                 </span>
               </div>
               {discountAmount > 0 && (
@@ -481,6 +551,59 @@ function Input({
         onChange={(e) => onChange(e.target.value)}
         className="bg-white border border-[var(--color-border)] rounded-[2px] px-3 py-2.5 text-ink-900 text-sm focus:outline-none focus:border-ink-900"
       />
+    </label>
+  );
+}
+
+function MethodRadio({
+  name,
+  value,
+  checked,
+  onChange,
+  title,
+  subtitle,
+  cost,
+}: {
+  name: string;
+  value: string;
+  checked: boolean;
+  onChange: () => void;
+  title: string;
+  subtitle: string;
+  cost: string;
+}) {
+  return (
+    <label
+      className={`relative flex gap-3 p-4 border-[1.5px] rounded-[4px] cursor-pointer transition-all ${
+        checked
+          ? 'border-ink-900 bg-paper-100'
+          : 'border-[var(--color-border)] bg-white hover:border-ink-500'
+      }`}
+    >
+      <input
+        type="radio"
+        name={name}
+        value={value}
+        checked={checked}
+        onChange={onChange}
+        className="sr-only"
+      />
+      <div
+        className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 transition-all ${
+          checked ? 'border-ink-900 bg-ink-900' : 'border-ink-500'
+        }`}
+      >
+        {checked && (
+          <span className="block w-2 h-2 rounded-full bg-paper-100 m-auto mt-[5px]" />
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-ink-900 mb-0.5">{title}</p>
+        <p className="text-[11px] text-ink-500 mb-2">{subtitle}</p>
+        <p className="text-[11px] font-medium uppercase tracking-widest text-rust-500">
+          {cost}
+        </p>
+      </div>
     </label>
   );
 }

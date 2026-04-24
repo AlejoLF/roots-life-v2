@@ -24,17 +24,18 @@ const ShippingSchema = z.object({
   lastName: z.string().min(1),
   email: z.string().email(),
   phone: z.string().min(6),
-  street: z.string().min(1),
-  streetNumber: z.string().min(1),
+  street: z.string().optional().default(''),
+  streetNumber: z.string().optional().default(''),
   apartment: z.string().optional().default(''),
-  city: z.string().min(1),
-  province: z.string().min(1),
-  zip: z.string().min(4),
+  city: z.string().optional().default(''),
+  province: z.string().optional().default(''),
+  zip: z.string().optional().default(''),
   notes: z.string().optional().default(''),
 });
 
 const CheckoutSchema = z.object({
   items: z.array(ItemSchema).min(1),
+  shippingMethod: z.enum(['mercado_envios', 'pickup']).default('mercado_envios'),
   shipping: ShippingSchema,
   shippingCost: z.number().nonnegative().default(0),
   discountCode: z.string().optional(),
@@ -58,7 +59,24 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
-  const { items, shipping, shippingCost, discountCode } = parsed.data;
+  const { items, shippingMethod, shipping, shippingCost: rawShippingCost, discountCode } = parsed.data;
+  const shippingCost = shippingMethod === 'pickup' ? 0 : rawShippingCost;
+
+  // Validación adicional para envío a domicilio
+  if (shippingMethod === 'mercado_envios') {
+    const missing: string[] = [];
+    if (!shipping.street) missing.push('calle');
+    if (!shipping.streetNumber) missing.push('número');
+    if (!shipping.city) missing.push('ciudad');
+    if (!shipping.province) missing.push('provincia');
+    if (!shipping.zip) missing.push('CP');
+    if (missing.length > 0) {
+      return NextResponse.json(
+        { ok: false, error: `Faltan datos de envío: ${missing.join(', ')}` },
+        { status: 400 },
+      );
+    }
+  }
 
   // Session opcional (guest checkout también válido)
   const session = await auth();
@@ -122,7 +140,7 @@ export async function POST(req: NextRequest) {
         zip: shipping.zip,
         notes: shipping.notes,
       },
-      shipping_method: 'mercado_envios',
+      shipping_method: shippingMethod,
       subtotal,
       shipping_cost: shippingCost,
       discount: discountAmount,

@@ -35,6 +35,7 @@ type OrderRow = {
   total: number;
   tracking_code: string | null;
   tracking_expires_at: string | null;
+  shipping_method: string | null;
   created_at: string;
   paid_at: string | null;
   preparing_at: string | null;
@@ -132,7 +133,7 @@ export default async function SeguirPage({ params }: Props) {
   const { data } = await supabase
     .from('orders')
     .select(
-      'id, tracking_token, status, items, subtotal, shipping_cost, discount, total, tracking_code, tracking_expires_at, created_at, paid_at, preparing_at, shipped_at, delivered_at, shipping_address',
+      'id, tracking_token, status, items, subtotal, shipping_cost, discount, total, tracking_code, tracking_expires_at, shipping_method, created_at, paid_at, preparing_at, shipped_at, delivered_at, shipping_address',
     )
     .eq('tracking_token', token)
     .maybeSingle();
@@ -209,6 +210,7 @@ export default async function SeguirPage({ params }: Props) {
   const statusLabel = STATUS_LABEL[status] ?? order.status;
   const isCancelled = status === 'cancelled' || status === 'refunded';
   const isDelivered = status === 'delivered';
+  const isPickup = order.shipping_method === 'pickup';
   const hasTracking = Boolean(order.tracking_code);
   const firstName = order.shipping_address?.firstName ?? '';
 
@@ -233,13 +235,36 @@ export default async function SeguirPage({ params }: Props) {
               {firstName ? `Hola ${firstName}` : 'Tu pedido'}
             </h1>
             <p className="text-body-lg text-ink-900">{statusLabel}</p>
-            {order.shipping_address?.city && (
+            {isPickup ? (
               <p className="text-body-sm text-ink-500 mt-2">
-                Envío a {order.shipping_address.city},{' '}
-                {order.shipping_address.province}
+                Retiro en local · Av. Kennedy 2665, Comodoro
               </p>
+            ) : (
+              order.shipping_address?.city && (
+                <p className="text-body-sm text-ink-500 mt-2">
+                  Envío a {order.shipping_address.city},{' '}
+                  {order.shipping_address.province}
+                </p>
+              )
             )}
           </div>
+
+          {/* Pickup info card */}
+          {isPickup && !isCancelled && (
+            <section className="bg-ink-900 text-paper-100 rounded-[4px] p-6 mb-6">
+              <p className="text-caption text-rust-200 mb-3">Dirección de retiro</p>
+              <h2 className="font-display font-bold text-xl uppercase text-paper-100 mb-2">
+                Av. Kennedy 2665
+              </h2>
+              <p className="text-white/85 text-sm mb-4">
+                Comodoro Rivadavia · Chubut · CP 9000
+              </p>
+              <p className="text-white/70 text-xs leading-relaxed">
+                Te avisamos por email y WhatsApp cuando tu pedido esté listo
+                para retirar. Coordinamos horario si hace falta.
+              </p>
+            </section>
+          )}
 
           {/* Cancelled state */}
           {isCancelled ? (

@@ -37,6 +37,7 @@ type OrderRow = {
   shipping_cost: number;
   discount: number;
   created_at: string;
+  shipping_method: string | null;
   shipping_address: {
     firstName?: string;
     lastName?: string;
@@ -57,7 +58,7 @@ export default async function GraciasPage({ searchParams }: Props) {
     const { data } = await supabase
       .from('orders')
       .select(
-        'id, tracking_token, status, items, total, subtotal, shipping_cost, discount, created_at, shipping_address',
+        'id, tracking_token, status, items, total, subtotal, shipping_cost, discount, created_at, shipping_method, shipping_address',
       )
       .eq('tracking_token', token)
       .maybeSingle();
@@ -75,7 +76,10 @@ export default async function GraciasPage({ searchParams }: Props) {
             <>
               <SuccessHeader order={order} isPending={isPending} />
               <OrderSummary order={order} />
-              <TimelineCard isPending={isPending} />
+              <TimelineCard
+                isPending={isPending}
+                isPickup={order.shipping_method === 'pickup'}
+              />
               <NextSteps order={order} />
             </>
           )}
@@ -186,31 +190,56 @@ function OrderSummary({ order }: { order: OrderRow }) {
   );
 }
 
-function TimelineCard({ isPending }: { isPending: boolean }) {
-  const steps = [
-    {
-      title: 'Pago recibido',
-      desc: isPending
-        ? 'Estamos esperando confirmación de MercadoPago (suele ser instantánea para tarjetas, hasta 2 hs para efectivo).'
-        : 'Tu pago fue confirmado y registrado.',
-      status: isPending ? 'pending' : 'done',
-    },
-    {
-      title: 'Preparación',
-      desc: 'Preparamos tu pedido en el taller. 1-3 días hábiles.',
-      status: 'waiting',
-    },
-    {
-      title: 'Despacho + tracking',
-      desc: 'Recibís un email con el código de seguimiento de Mercado Envíos.',
-      status: 'waiting',
-    },
-    {
-      title: 'Entrega',
-      desc: 'Tiempos según tu zona. Podés consultar el tracking en cualquier momento.',
-      status: 'waiting',
-    },
-  ] as const;
+function TimelineCard({ isPending, isPickup }: { isPending: boolean; isPickup: boolean }) {
+  const steps = isPickup
+    ? ([
+        {
+          title: 'Pago recibido',
+          desc: isPending
+            ? 'Estamos esperando confirmación de MercadoPago.'
+            : 'Tu pago fue confirmado y registrado.',
+          status: isPending ? 'pending' : 'done',
+        },
+        {
+          title: 'Preparación',
+          desc: 'Preparamos tu pedido en el taller. 1-3 días hábiles.',
+          status: 'waiting',
+        },
+        {
+          title: 'Listo para retirar',
+          desc: 'Te avisamos por email y WhatsApp cuando esté listo. Retirás por Av. Kennedy 2665, Comodoro.',
+          status: 'waiting',
+        },
+        {
+          title: 'Retirado',
+          desc: 'Confirmamos la entrega cuando pases a buscarlo.',
+          status: 'waiting',
+        },
+      ] as const)
+    : ([
+        {
+          title: 'Pago recibido',
+          desc: isPending
+            ? 'Estamos esperando confirmación de MercadoPago (suele ser instantánea para tarjetas, hasta 2 hs para efectivo).'
+            : 'Tu pago fue confirmado y registrado.',
+          status: isPending ? 'pending' : 'done',
+        },
+        {
+          title: 'Preparación',
+          desc: 'Preparamos tu pedido en el taller. 1-3 días hábiles.',
+          status: 'waiting',
+        },
+        {
+          title: 'Despacho + tracking',
+          desc: 'Recibís un email con el código de seguimiento de Mercado Envíos.',
+          status: 'waiting',
+        },
+        {
+          title: 'Entrega',
+          desc: 'Tiempos según tu zona. Podés consultar el tracking en cualquier momento.',
+          status: 'waiting',
+        },
+      ] as const);
 
   return (
     <section className="bg-ink-900 text-paper-100 rounded-[4px] p-6 mb-6">
