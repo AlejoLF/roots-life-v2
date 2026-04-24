@@ -126,6 +126,69 @@ export async function getPayment(paymentId: string) {
   return payment.get({ id: paymentId });
 }
 
+export type ShipmentStatus =
+  | 'pending'
+  | 'handling'
+  | 'ready_to_ship'
+  | 'shipped'
+  | 'delivered'
+  | 'not_delivered'
+  | 'cancelled';
+
+export type Shipment = {
+  id: number;
+  status: ShipmentStatus;
+  substatus?: string;
+  tracking_number?: string | null;
+  tracking_method?: string | null;
+  external_reference?: string | null;
+  order_id?: number | null;
+  date_created?: string;
+  last_updated?: string;
+};
+
+/**
+ * Fetch shipment desde MP API directo (el SDK v2 no expone shipments como clase propia).
+ */
+export async function getShipment(shipmentId: string): Promise<Shipment | null> {
+  const test = useTestMode();
+  const token = test
+    ? process.env.MP_ACCESS_TOKEN_TEST
+    : process.env.MP_ACCESS_TOKEN_PROD;
+  if (!token) return null;
+
+  try {
+    const res = await fetch(
+      `https://api.mercadopago.com/shipments/${shipmentId}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    if (!res.ok) {
+      console.warn('[mp] getShipment non-ok:', res.status, shipmentId);
+      return null;
+    }
+    return (await res.json()) as Shipment;
+  } catch (err) {
+    console.error('[mp] getShipment failed:', err);
+    return null;
+  }
+}
+
+export function mapShipmentStatusToOrderStatus(
+  s: ShipmentStatus,
+): 'preparing' | 'shipped' | 'delivered' | null {
+  switch (s) {
+    case 'handling':
+    case 'ready_to_ship':
+      return 'preparing';
+    case 'shipped':
+      return 'shipped';
+    case 'delivered':
+      return 'delivered';
+    default:
+      return null;
+  }
+}
+
 export function isProduction(): boolean {
   return !useTestMode();
 }

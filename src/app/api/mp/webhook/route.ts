@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
-import { getPayment } from '@/lib/mercadopago';
+import {
+  getPayment,
+  getShipment,
+  mapShipmentStatusToOrderStatus,
+} from '@/lib/mercadopago';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { markDiscountCodeUsed, validateDiscountCode } from '@/lib/discount';
 import { sendEmail } from '@/lib/resend';
@@ -98,9 +102,10 @@ export async function POST(req: NextRequest) {
   try {
     if (type === 'payment') {
       await handlePayment(String(effectiveId));
+    } else if (type === 'shipment' || type === 'shipments') {
+      await handleShipment(String(effectiveId));
     }
-    // merchant_order / shipment updates: llegan a /api/mp/webhook también
-    // y los procesamos en Fase 5.
+    // merchant_order no lo procesamos (redundante — payment + shipment cubren todo)
   } catch (err) {
     console.error('[mp-webhook] handler error:', err);
     // Devolvemos 200 para que MP no re-intente masivamente si es un bug nuestro.
@@ -230,6 +235,80 @@ async function handlePayment(paymentId: string) {
   } catch (err) {
     console.error('[mp-webhook] email de confirmación falló:', err);
   }
+}
+
+async function handleShipment(shipmentId: string) {
+  const shipment = await getShipment(shipmentId);
+  if (!shipment) return;
+
+  const supabase = getSupabaseAdmin();
+  // Buscar la orden por mp_shipping_id (si ya la vinculamos) o por external_reference
+  const { data: orderByShipping } = await supabase
+    .from('orders')
+    .select(
+      'id, status, shipping_address, guest_email, tracking_token, tracking_code',
+    )
+    .eq('mp_shipping_id', shipmentId)
+    .maybeSingle();
+
+  let order = orderByShipping;
+
+  // Si aún no está vinculada, buscar por external_reference del shipment
+  if (!order && shipment.external_reference) {
+    const { data: orderByRef } = await supabase
+      .from('orders')
+      .select(
+        'id, status, shipping_address, guest_email, tracking_token, tracking_code',
+      )
+      .eq('id', shipment.external_reference)
+      .maybeSingle();
+    order = orderByRef;
+    if (order) {
+      // Vincular para futuras notificaciones
+      await supabase
+        .from('orders')
+        .update({ mp_shipping_id: shipmentId })
+        .eq('id', order.id);
+    }
+  }
+
+  if (!order) {
+    console.warn('[mp-webhook] shipment sin orden asociada', shipmentId);
+    return;
+  }
+
+  const newStatus = mapShipmentStatusToOrderStatus(shipment.status);
+  if (!newStatus) return;
+
+  const nowIso = new Date().toISOString();
+  const updates: Record<string, unknown> = {};
+
+  if (order.status !== newStatus) {
+    updates.status = newStatus;
+    if (newStatus === 'preparing') updates.preparing_at = nowIso;
+    if (newStatus === 'shipped') updates.shipped_at = nowIso;
+    if (newStatus === 'delivered') {
+      updates.delivered_at = nowIso;
+      // Ventana de 7 días para reclamos / tracking público
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      updates.tracking_expires_at = expiresAt.toISOString();
+    }
+  }
+
+  if (shipment.tracking_number && shipment.tracking_number !== order.tracking_code) {
+    updates.tracking_code = shipment.tracking_number;
+  }
+
+  if (Object.keys(updates).length === 0) return;
+
+  await supabase.from('orders').update(updates).eq('id', order.id);
+
+  console.log(
+    '[mp-webhook] shipment update:',
+    order.id.slice(0, 8),
+    '→',
+    updates,
+  );
 }
 
 // MP a veces pega con GET para confirmar que el endpoint existe
