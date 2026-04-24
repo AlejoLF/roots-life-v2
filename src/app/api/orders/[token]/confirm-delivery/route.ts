@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { sendPostDeliveryEmail } from '@/lib/post-delivery';
 
 /**
  * Self-report de entrega — el comprador confirma que recibió el paquete.
@@ -50,6 +51,13 @@ export async function POST(
       tracking_expires_at: expiresAt,
     })
     .eq('id', order.id);
+
+  // Dispara email post-entrega (idempotente)
+  try {
+    await sendPostDeliveryEmail(order.id);
+  } catch (err) {
+    console.error('[confirm-delivery] post-delivery email falló:', err);
+  }
 
   return NextResponse.json({ ok: true });
 }

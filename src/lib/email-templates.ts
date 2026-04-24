@@ -240,6 +240,75 @@ Preparamos tu pedido en el taller (1-3 días hábiles). Cuando lo despachemos re
   };
 }
 
+export function postDeliveryTemplate(opts: {
+  name?: string;
+  orderId: string;
+  trackingToken: string;
+  itemsCount: number;
+}): { html: string; text: string; subject: string } {
+  const name = opts.name?.trim() || '';
+  const greeting = name ? `¡Hola ${name}!` : '¡Hola!';
+  const trackingUrl = `${SITE_URL}/seguir/${opts.trackingToken}`;
+  const reviewUrl = 'https://g.page/r/rootslife/review';
+  const instagramUrl = 'https://instagram.com/rootslife.cr';
+
+  const bodyHtml = `
+<h2 style="margin:0 0 14px 0;font-size:26px;font-weight:700;color:#0E0E0E;line-height:1.15;">${greeting}</h2>
+<p style="margin:0 0 20px 0;font-size:15px;color:#4D443A;">
+Nos figura que tu pedido #${opts.orderId.slice(0, 8)} ya fue entregado. Queríamos asegurarnos de que todo llegó bien y que te encanta lo que elegiste.
+</p>
+
+<table cellpadding="0" cellspacing="0" border="0" style="margin:28px 0;background:#F7F3EA;border-radius:4px;">
+<tr><td style="padding:24px;">
+<p style="margin:0 0 8px 0;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#C2623D;font-weight:600;">¿Todo bien con tu pedido?</p>
+<p style="margin:0 0 16px 0;font-size:15px;color:#0E0E0E;line-height:1.5;">
+Si ya lo usaste y te gustó, una reseña rápida en Google nos hace volar. De verdad — cada review suma muchísimo.
+</p>
+<a href="${reviewUrl}" style="display:inline-block;background:#C2623D;color:#F7F3EA;text-decoration:none;padding:12px 22px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border-radius:2px;">
+Dejar una reseña →
+</a>
+</td></tr>
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" style="margin:20px 0;background:#0E0E0E;border-radius:4px;">
+<tr><td style="padding:24px;">
+<p style="margin:0 0 8px 0;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#F2BCA5;font-weight:600;">Mostralo en IG</p>
+<p style="margin:0 0 16px 0;font-size:15px;color:#F7F3EA;line-height:1.5;">
+Si nos taggeás en una foto con tu ${opts.itemsCount > 1 ? 'nueva compra' : 'nueva prenda'}, lo compartimos en nuestras historias. Nos encanta ver cómo lo armás.
+</p>
+<a href="${instagramUrl}" style="display:inline-block;background:transparent;color:#F7F3EA;text-decoration:none;padding:12px 22px;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border:2px solid #F7F3EA;border-radius:2px;">
+Taggearnos @rootslife.cr →
+</a>
+</td></tr>
+</table>
+
+<h3 style="margin:32px 0 10px 0;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#7A6F5E;">¿Algo no cuadra?</h3>
+<p style="margin:0 0 12px 0;font-size:14px;color:#4D443A;line-height:1.55;">
+Si hubo un problema con el pedido (talle, estado, color, envío) tenés <strong>15 días</strong> desde la entrega para cambios y devoluciones. Escribinos y lo resolvemos sin vueltas.
+</p>
+<p style="margin:0 0 20px 0;font-size:14px;">
+<a href="https://wa.me/5492974737664" style="color:#C2623D;text-decoration:underline;">WhatsApp</a>
+&nbsp;·&nbsp;
+<a href="mailto:emma.irusta@hotmail.com" style="color:#C2623D;text-decoration:underline;">Email</a>
+&nbsp;·&nbsp;
+<a href="${trackingUrl}" style="color:#C2623D;text-decoration:underline;">Detalle del pedido</a>
+</p>
+<p style="margin:24px 0 0 0;font-size:12px;color:#7A6F5E;padding-top:20px;border-top:1px solid #EFEAE0;">
+Gracias por elegirnos. Te leemos en cualquier canal.
+</p>`;
+
+  const text = `${greeting}\n\nTu pedido #${opts.orderId.slice(0, 8)} fue entregado. Esperamos que te encante.\n\nSi te gustó, nos ayudás mucho con una reseña:\n${reviewUrl}\n\nTaggearnos en Instagram: ${instagramUrl}\n\nSi hubo algún problema, tenés 15 días para cambios. Escribinos a emma.irusta@hotmail.com o por WhatsApp.\n\nDetalle del pedido: ${trackingUrl}`;
+
+  return {
+    subject: '¿Cómo te fue con tu pedido? · ROOTS LIFE',
+    html: baseTemplate({
+      preheader: 'Tu pedido ya llegó. Contanos qué te pareció.',
+      bodyHtml,
+    }),
+    text,
+  };
+}
+
 export function passwordResetTemplate(opts: {
   name?: string;
   resetUrl: string;

@@ -10,6 +10,7 @@ import { markDiscountCodeUsed, validateDiscountCode } from '@/lib/discount';
 import { sendEmail } from '@/lib/resend';
 import { orderConfirmationTemplate } from '@/lib/email-templates';
 import { appendOrderToSheet } from '@/lib/orders-sheet';
+import { sendPostDeliveryEmail } from '@/lib/post-delivery';
 
 /**
  * Webhook de MercadoPago — recibe notificaciones de payment y merchant_order.
@@ -309,6 +310,15 @@ async function handleShipment(shipmentId: string) {
     '→',
     updates,
   );
+
+  // Disparar email post-entrega si recién transicionó a delivered
+  if (updates.status === 'delivered') {
+    try {
+      await sendPostDeliveryEmail(order.id);
+    } catch (err) {
+      console.error('[mp-webhook] post-delivery email falló:', err);
+    }
+  }
 }
 
 // MP a veces pega con GET para confirmar que el endpoint existe
