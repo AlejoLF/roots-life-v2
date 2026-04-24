@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/Button';
 
 type RevalidateResult =
@@ -198,6 +199,24 @@ export default function AdminPage() {
                 )}
               </div>
             )}
+
+            {/* Guía de uso card */}
+            <Link
+              href="/admin/guia"
+              className="bg-ink-700 border border-ink-500 rounded-[2px] p-6 hover:border-rust-200 transition-colors block no-underline"
+            >
+              <p className="text-caption text-rust-200 mb-2">Ayuda</p>
+              <h2 className="font-display font-bold uppercase text-paper-100 text-xl mb-3">
+                Guía de uso
+              </h2>
+              <p className="text-white/80 text-sm leading-relaxed mb-3">
+                Cómo usar cada pestaña de la planilla — productos, cápsulas,
+                suscriptores y sobre todo la nueva de pedidos.
+              </p>
+              <span className="inline-block text-[11px] font-semibold uppercase tracking-widest text-rust-200">
+                Abrir guía →
+              </span>
+            </Link>
 
             {/* Diagnóstico card */}
             <div className="bg-ink-700 border border-ink-500 rounded-[2px] p-6">
