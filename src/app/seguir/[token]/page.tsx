@@ -70,6 +70,17 @@ const STATUS_LABEL: Record<StatusKey, string> = {
   refunded: 'Reintegrado',
 };
 
+const PICKUP_STATUS_LABEL: Record<StatusKey, string> = {
+  pending: 'Pago pendiente',
+  paid: 'Pago confirmado',
+  preparing: 'En preparación',
+  shipped: 'Listo para retirar',
+  in_transit: 'Listo para retirar',
+  delivered: 'Retirado ✓',
+  cancelled: 'Cancelado',
+  refunded: 'Reintegrado',
+};
+
 const TIMELINE_STEPS: { key: StatusKey; label: string; desc: string }[] = [
   { key: 'paid', label: 'Pago confirmado', desc: 'Recibimos tu pago.' },
   {
@@ -86,6 +97,25 @@ const TIMELINE_STEPS: { key: StatusKey; label: string; desc: string }[] = [
     key: 'delivered',
     label: 'Entregado',
     desc: 'Llegó a destino.',
+  },
+];
+
+const PICKUP_TIMELINE_STEPS: { key: StatusKey; label: string; desc: string }[] = [
+  { key: 'paid', label: 'Pago confirmado', desc: 'Recibimos tu pago.' },
+  {
+    key: 'preparing',
+    label: 'En preparación',
+    desc: 'Estampamos y empaquetamos en el taller.',
+  },
+  {
+    key: 'shipped',
+    label: 'Listo para retirar',
+    desc: 'Te avisamos por email y WhatsApp cuando podés pasar a buscarlo.',
+  },
+  {
+    key: 'delivered',
+    label: 'Retirado',
+    desc: 'Confirmamos la entrega cuando pasás por el local.',
   },
 ];
 
@@ -207,10 +237,12 @@ export default async function SeguirPage({ params }: Props) {
   }
 
   const status = order.status as StatusKey;
-  const statusLabel = STATUS_LABEL[status] ?? order.status;
   const isCancelled = status === 'cancelled' || status === 'refunded';
   const isDelivered = status === 'delivered';
   const isPickup = order.shipping_method === 'pickup';
+  const statusLabel = isPickup
+    ? (PICKUP_STATUS_LABEL[status] ?? order.status)
+    : (STATUS_LABEL[status] ?? order.status);
   const hasTracking = Boolean(order.tracking_code);
   const firstName = order.shipping_address?.firstName ?? '';
 
@@ -249,22 +281,8 @@ export default async function SeguirPage({ params }: Props) {
             )}
           </div>
 
-          {/* Pickup info card */}
-          {isPickup && !isCancelled && (
-            <section className="bg-ink-900 text-paper-100 rounded-[4px] p-6 mb-6">
-              <p className="text-caption text-rust-200 mb-3">Dirección de retiro</p>
-              <h2 className="font-display font-bold text-xl uppercase text-paper-100 mb-2">
-                Av. Kennedy 2665
-              </h2>
-              <p className="text-white/85 text-sm mb-4">
-                Comodoro Rivadavia · Chubut · CP 9000
-              </p>
-              <p className="text-white/70 text-xs leading-relaxed">
-                Te avisamos por email y WhatsApp cuando tu pedido esté listo
-                para retirar. Coordinamos horario si hace falta.
-              </p>
-            </section>
-          )}
+          {/* Pickup info card con botón Cómo llegar */}
+          {isPickup && !isCancelled && <PickupAddressCard />}
 
           {/* Cancelled state */}
           {isCancelled ? (
@@ -283,11 +301,12 @@ export default async function SeguirPage({ params }: Props) {
               orderStatus={status}
               stepDates={stepDates}
               trackingCode={order.tracking_code}
+              isPickup={isPickup}
             />
           )}
 
-          {/* Tracking code card */}
-          {hasTracking && !isCancelled && (
+          {/* Tracking code card — solo para envíos, no para retiros */}
+          {hasTracking && !isCancelled && !isPickup && (
             <TrackingCodeCard
               code={order.tracking_code!}
               deliveredAt={order.delivered_at}
@@ -320,16 +339,21 @@ function Timeline({
   orderStatus,
   stepDates,
   trackingCode,
+  isPickup,
 }: {
   orderStatus: StatusKey;
   stepDates: Partial<Record<StatusKey, string | null>>;
   trackingCode: string | null;
+  isPickup: boolean;
 }) {
+  const steps = isPickup ? PICKUP_TIMELINE_STEPS : TIMELINE_STEPS;
   return (
     <section className="bg-white border border-[var(--color-border)] rounded-[4px] p-6 mb-6">
-      <h2 className="text-caption text-ink-500 mb-6">Progreso del pedido</h2>
+      <h2 className="text-caption text-ink-500 mb-6">
+        {isPickup ? 'Progreso del retiro' : 'Progreso del pedido'}
+      </h2>
       <ol className="list-none p-0 m-0 flex flex-col gap-5">
-        {TIMELINE_STEPS.map((step) => {
+        {steps.map((step, i) => {
           const status = stepStatusFor(orderStatus, step.key);
           const date = stepDates[step.key];
           return (
@@ -343,7 +367,7 @@ function Timeline({
                       : 'bg-paper-200 text-ink-500'
                 }`}
               >
-                {status === 'done' ? '✓' : TIMELINE_STEPS.indexOf(step) + 1}
+                {status === 'done' ? '✓' : i + 1}
               </div>
               <div className="flex-1 pt-0.5">
                 <p
@@ -359,16 +383,86 @@ function Timeline({
                     {formatDate(date)}
                   </p>
                 )}
-                {step.key === 'shipped' && status === 'current' && trackingCode && (
-                  <p className="text-[11px] text-rust-500 mt-1 font-mono">
-                    Tracking: {trackingCode}
-                  </p>
-                )}
+                {!isPickup &&
+                  step.key === 'shipped' &&
+                  status === 'current' &&
+                  trackingCode && (
+                    <p className="text-[11px] text-rust-500 mt-1 font-mono">
+                      Tracking: {trackingCode}
+                    </p>
+                  )}
               </div>
             </li>
           );
         })}
       </ol>
+    </section>
+  );
+}
+
+function PickupAddressCard() {
+  const mapsQuery = 'Av. Kennedy 2665, Comodoro Rivadavia, Chubut';
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`;
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mapsQuery)}`;
+
+  return (
+    <section className="bg-ink-900 text-paper-100 rounded-[4px] p-6 mb-6">
+      <p className="text-caption text-rust-200 mb-3">Dirección de retiro</p>
+      <div className="flex items-start gap-3 mb-4">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className="text-rust-200 flex-shrink-0 mt-1"
+        >
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+        <div>
+          <h2 className="font-display font-bold text-xl uppercase text-paper-100 mb-1">
+            Av. Kennedy 2665
+          </h2>
+          <p className="text-white/85 text-sm">
+            Comodoro Rivadavia · Chubut · CP 9000
+          </p>
+        </div>
+      </div>
+      <p className="text-white/70 text-xs leading-relaxed mb-4">
+        Te avisamos por email y WhatsApp cuando tu pedido esté listo para
+        retirar. Coordinamos horario si hace falta.
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <a
+          href={directionsUrl}
+          target="_blank"
+          rel="noopener"
+          className="inline-flex items-center gap-2 bg-rust-500 hover:bg-rust-700 text-paper-100 px-4 py-2 text-[11px] font-semibold uppercase tracking-widest rounded-[2px]"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polygon points="3 11 22 2 13 21 11 13 3 11" />
+          </svg>
+          Cómo llegar
+        </a>
+        <a
+          href={mapsUrl}
+          target="_blank"
+          rel="noopener"
+          className="inline-flex items-center gap-2 border border-paper-100 text-paper-100 hover:bg-paper-100 hover:text-ink-900 px-4 py-2 text-[11px] font-semibold uppercase tracking-widest rounded-[2px]"
+        >
+          Ver en mapa
+        </a>
+        <a
+          href="https://wa.me/5492974737664"
+          target="_blank"
+          rel="noopener"
+          className="inline-flex items-center gap-2 border border-paper-100 text-paper-100 hover:bg-paper-100 hover:text-ink-900 px-4 py-2 text-[11px] font-semibold uppercase tracking-widest rounded-[2px]"
+        >
+          WhatsApp
+        </a>
+      </div>
     </section>
   );
 }

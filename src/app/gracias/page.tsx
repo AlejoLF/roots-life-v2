@@ -274,6 +274,7 @@ function TimelineCard({ isPending, isPickup }: { isPending: boolean; isPickup: b
 }
 
 function NextSteps({ order }: { order: OrderRow }) {
+  const isPickup = order.shipping_method === 'pickup';
   return (
     <div className="flex flex-wrap gap-3 justify-center">
       <Button
@@ -281,8 +282,17 @@ function NextSteps({ order }: { order: OrderRow }) {
         variant="accent"
         size="md"
       >
-        Seguir mi pedido →
+        {isPickup ? 'Ver info del retiro →' : 'Seguir mi pedido →'}
       </Button>
+      {isPickup && (
+        <Button
+          href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent('Av. Kennedy 2665, Comodoro Rivadavia, Chubut')}`}
+          variant="dark"
+          size="md"
+        >
+          Cómo llegar
+        </Button>
+      )}
       <Button href="/catalogo" variant="outline" size="md">
         Seguir comprando
       </Button>

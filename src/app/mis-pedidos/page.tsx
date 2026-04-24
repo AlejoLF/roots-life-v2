@@ -32,6 +32,17 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
   refunded: 'Reintegrado',
 };
 
+const PICKUP_STATUS_LABEL: Record<OrderStatus, string> = {
+  pending: 'Pago pendiente',
+  paid: 'Pago confirmado',
+  preparing: 'En preparación',
+  shipped: 'Listo para retirar',
+  in_transit: 'Listo para retirar',
+  delivered: 'Retirado',
+  cancelled: 'Cancelado',
+  refunded: 'Reintegrado',
+};
+
 const STATUS_COLOR: Record<OrderStatus, string> = {
   pending: 'bg-[#4D443A] text-paper-100',
   paid: 'bg-[#3D5A4A] text-paper-100',
@@ -63,6 +74,7 @@ type Order = {
   shipped_at: string | null;
   delivered_at: string | null;
   tracking_code: string | null;
+  shipping_method: string | null;
 };
 
 export default async function MisPedidosPage() {
@@ -73,7 +85,7 @@ export default async function MisPedidosPage() {
   const { data } = await supabase
     .from('orders')
     .select(
-      'id, tracking_token, status, items, total, created_at, shipped_at, delivered_at, tracking_code',
+      'id, tracking_token, status, items, total, created_at, shipped_at, delivered_at, tracking_code, shipping_method',
     )
     .eq('user_id', session.user.id)
     .order('created_at', { ascending: false })
@@ -132,7 +144,10 @@ function EmptyState() {
 function OrdersList({ orders }: { orders: Order[] }) {
   return (
     <ul className="list-none p-0 m-0 space-y-5">
-      {orders.map((order) => (
+      {orders.map((order) => {
+        const isPickup = order.shipping_method === 'pickup';
+        const labels = isPickup ? PICKUP_STATUS_LABEL : STATUS_LABEL;
+        return (
         <li
           key={order.id}
           className="bg-white border border-[var(--color-border)] rounded-[4px] overflow-hidden"
@@ -142,6 +157,7 @@ function OrdersList({ orders }: { orders: Order[] }) {
             <div>
               <p className="text-[11px] text-ink-500 uppercase tracking-widest mb-0.5">
                 Pedido #{order.id.slice(0, 8)}
+                {isPickup && <span className="ml-2 text-rust-500">· Retiro en local</span>}
               </p>
               <p className="text-sm text-ink-900">
                 {new Date(order.created_at).toLocaleDateString('es-AR', {
@@ -154,7 +170,7 @@ function OrdersList({ orders }: { orders: Order[] }) {
             <span
               className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest ${STATUS_COLOR[order.status]}`}
             >
-              {STATUS_LABEL[order.status]}
+              {labels[order.status]}
             </span>
           </div>
 
@@ -197,11 +213,12 @@ function OrdersList({ orders }: { orders: Order[] }) {
               href={`/seguir/${order.tracking_token}`}
               className="text-[11px] font-semibold uppercase tracking-widest text-ink-900 hover:text-rust-500"
             >
-              Ver tracking →
+              {isPickup ? 'Ver retiro →' : 'Ver tracking →'}
             </Link>
           </div>
         </li>
-      ))}
+        );
+      })}
     </ul>
   );
 }
