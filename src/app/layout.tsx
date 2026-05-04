@@ -11,7 +11,8 @@ const poppins = Poppins({
   display: "swap",
 });
 
-const SITE_URL = "https://www.rootslife.shop";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.rootslife.com.ar";
 const OG_IMAGE = `${SITE_URL}/og.jpg`;
 
 export const metadata: Metadata = {

@@ -82,7 +82,7 @@ export async function appendOrderToSheet(order: OrderForSheet): Promise<void> {
   const notasCliente = addr?.notes ?? '';
 
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.rootslife.shop';
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.rootslife.com.ar';
   const trackingLink = `${siteUrl}/seguir/${order.tracking_token}`;
 
   const row: (string | number)[] = [

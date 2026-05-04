@@ -160,7 +160,7 @@ export async function POST(req: NextRequest) {
 
   // Crear preference en MP
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.rootslife.shop';
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.rootslife.com.ar';
 
   const mpItems: PreferenceItem[] = items.map((i) => ({
     id: i.slug,

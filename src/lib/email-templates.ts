@@ -3,7 +3,9 @@
  * Inline CSS obligatorio para compatibilidad con Gmail / Outlook.
  */
 
-const SITE_URL = 'https://www.rootslife.shop';
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.rootslife.com.ar';
+const SITE_LABEL = SITE_URL.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 
 type BaseOpts = {
   preheader?: string;
@@ -28,7 +30,7 @@ ${bodyHtml}
 ROOTS LIFE · Comodoro Rivadavia · Patagonia
 </p>
 <p style="margin:8px 0 0 0;font-size:10px;color:rgba(247,243,234,0.45);">
-<a href="${SITE_URL}" style="color:rgba(247,243,234,0.6);text-decoration:underline;">rootslife.shop</a>
+<a href="${SITE_URL}" style="color:rgba(247,243,234,0.6);text-decoration:underline;">${SITE_LABEL}</a>
 </p>
 </td></tr>
 </table>

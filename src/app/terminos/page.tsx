@@ -21,7 +21,7 @@ export default function TerminosPage() {
 
           <Section title="1. Aceptación de los términos">
             <p>
-              Al acceder y utilizar el sitio <strong>rootslife.shop</strong>, realizar una
+              Al acceder y utilizar el sitio <strong>rootslife.com.ar</strong>, realizar una
               compra o suscribirte a nuestro newsletter, aceptás estos términos y
               condiciones. Si no estás de acuerdo, te pedimos que no uses el sitio.
             </p>

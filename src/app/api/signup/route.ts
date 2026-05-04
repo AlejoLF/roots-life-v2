@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
 
   // Enviar email de verificación (con código de descuento si opt-in)
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.rootslife.shop';
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.rootslife.com.ar';
   const verifyUrl = `${baseUrl}/verificar?token=${token}`;
 
   const { subject, html, text } = verifyEmailTemplate({
