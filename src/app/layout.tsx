@@ -11,7 +11,11 @@ const poppins = Poppins({
   display: "swap",
 });
 
+const SITE_URL = "https://www.rootslife.shop";
+const OG_IMAGE = `${SITE_URL}/og.jpg`;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     template: "%s · ROOTS LIFE",
     default: "ROOTS LIFE · Indumentaria urbana desde la Patagonia",
@@ -22,8 +26,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ROOTS LIFE",
     description: "Indumentaria urbana desde la Patagonia",
+    url: SITE_URL,
+    siteName: "ROOTS LIFE",
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "ROOTS LIFE · Indumentaria urbana desde la Patagonia",
+      },
+    ],
     locale: "es_AR",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ROOTS LIFE",
+    description: "Indumentaria urbana desde la Patagonia",
+    images: [OG_IMAGE],
   },
 };
 
