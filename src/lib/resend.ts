@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 
-const FROM = 'ROOTS LIFE <no-reply@rootslife.shop>';
+const FROM = 'ROOTS LIFE <no-reply@rootslife.com.ar>';
 
 let client: Resend | null = null;
 
