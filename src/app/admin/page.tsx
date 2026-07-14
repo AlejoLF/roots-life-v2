@@ -200,6 +200,24 @@ export default function AdminPage() {
               </div>
             )}
 
+            {/* Cómo usar el panel card — punto de entrada */}
+            <Link
+              href="/admin/ayuda"
+              className="bg-rust-500 border border-rust-500 rounded-[2px] p-6 hover:bg-rust-700 transition-colors block no-underline"
+            >
+              <p className="text-caption text-paper-100/80 mb-2">Empezá acá</p>
+              <h2 className="font-display font-bold uppercase text-paper-100 text-xl mb-3">
+                Cómo usar el panel
+              </h2>
+              <p className="text-paper-100/85 text-sm leading-relaxed mb-3">
+                Guía rápida paso a paso: cargar productos nuevos, subir fotos,
+                cambiar precios y ver pedidos.
+              </p>
+              <span className="inline-block text-[11px] font-semibold uppercase tracking-widest text-paper-100">
+                Ver la guía →
+              </span>
+            </Link>
+
             {/* Subir imágenes card */}
             <Link
               href="/admin/imagenes"
