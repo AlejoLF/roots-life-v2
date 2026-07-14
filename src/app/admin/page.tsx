@@ -200,6 +200,24 @@ export default function AdminPage() {
               </div>
             )}
 
+            {/* Subir imágenes card */}
+            <Link
+              href="/admin/imagenes"
+              className="bg-ink-700 border border-ink-500 rounded-[2px] p-6 hover:border-rust-200 transition-colors block no-underline"
+            >
+              <p className="text-caption text-rust-200 mb-2">Productos</p>
+              <h2 className="font-display font-bold uppercase text-paper-100 text-xl mb-3">
+                Subir imágenes
+              </h2>
+              <p className="text-white/80 text-sm leading-relaxed mb-3">
+                Cargá o cambiá las fotos de cualquier producto. Cualquier
+                formato — se encuadran y optimizan solas.
+              </p>
+              <span className="inline-block text-[11px] font-semibold uppercase tracking-widest text-rust-200">
+                Abrir subida de imágenes →
+              </span>
+            </Link>
+
             {/* Guía de uso card */}
             <Link
               href="/admin/guia"
